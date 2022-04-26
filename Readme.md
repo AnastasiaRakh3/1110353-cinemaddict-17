@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Anastasiia Rakhmatova](https://up.htmlacademy.ru/ecmascript/17/user/1110353).
-* Наставник: [Антон Шаповалов](https://up.htmlacademy.ru/profile/id978827).
+* Наставник: [Антон Шаповалов](https://htmlacademy.ru/profile/id978827).
 
 ---
 
