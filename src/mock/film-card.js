@@ -55,21 +55,13 @@ const countTime = (time) => {
   const hours = Math.trunc(time/60);
   const minutes = time%60;
 
-  // switch (true) {
-  //   case (hours && minutes):
-  //     return `${hours}h ${minutes}m`;
-  //   case (hours):
-  //     return `${hours}h`;
-  //   case (minutes):
-  //     return `${minutes}m`;
-  // }
-
-  if (hours && minutes) {
-    return `${hours}h ${minutes}m`;
-  } else if (hours) {
-    return `${hours}h`;
-  } else {
-    return `${minutes}m`;
+  switch (true) {
+    case Boolean(hours && minutes):
+      return `${hours}h ${minutes}m`;
+    case Boolean(hours):
+      return `${hours}h`;
+    case Boolean(minutes):
+      return `${minutes}m`;
   }
 };
 
