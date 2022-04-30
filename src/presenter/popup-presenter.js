@@ -1,15 +1,12 @@
-import PopupCommentView from '../view/popup-comment-view.js';
+import PopupView from '../view/popup-view.js';
 import {render} from '../render.js';
 
-export default class CommentsPresenter {
+export default class PopupPresenter {
 
-  init = (CommentsContainer, CommentsModel) => {
-    this.CommentsContainer = CommentsContainer;
-    this.CommentsModel = CommentsModel;
-    this.blockComments = [...this.CommentsModel.getComments()];
+  init = (CommentsContainer, PopupModel) => {
+    this.commentsContainer = CommentsContainer;
+    this.popupModel = PopupModel.getPopup();
 
-    for (let i = 0; i < this.blockComments.length; i++) {
-      render(new PopupCommentView(this.blockComments[i]), this.CommentsContainer);
-    }
+    render(new PopupView(this.popupModel), this.commentsContainer);
   };
 }
