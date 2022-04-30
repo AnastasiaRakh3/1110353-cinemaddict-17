@@ -35,7 +35,7 @@ export const generateFilmCard = () => ({
   title: generateFilmTitle(),
   poster: generatePoster(),
   releaseDate: generateFilmReleaseDate(),
-  watchList: true,
+  watchList: Boolean(getRandomInteger(0,1)),
 // description:,
 // totalRating:,
 // genre:,

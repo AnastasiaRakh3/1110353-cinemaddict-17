@@ -8,5 +8,6 @@ const getRandomInteger = (a = 0, b = 1) => {
 };
 
 const humanizeFilmDate = (dueDate) => dayjs(dueDate).format('YYYY');
+const humanizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/DD HH:mm');
 
-export {getRandomInteger, humanizeFilmDate};
+export {getRandomInteger, humanizeFilmDate, humanizeCommentDate};
