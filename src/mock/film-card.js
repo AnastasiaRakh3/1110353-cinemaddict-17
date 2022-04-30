@@ -21,10 +21,20 @@ const generatePoster = () => {
   return posters[randomIndex];
 };
 
+const generateFilmReleaseDate = () => {
+  const filmDates = [
+    '2019-05-11T00:00:00.000Z',
+    '2021-03-10T00:00:00.000Z',
+    '2005-01-25T00:00:00.000Z',
+  ];
+  const randomIndex = getRandomInteger(0, filmDates.length - 1);
+  return filmDates[randomIndex];
+};
+
 export const generateFilmCard = () => ({
   title: generateFilmTitle(),
   poster: generatePoster(),
-  releaseDate: '2019-05-11T00:00:00.000Z',
+  releaseDate: generateFilmReleaseDate(),
   watchList: true,
 // description:,
 // totalRating:,
