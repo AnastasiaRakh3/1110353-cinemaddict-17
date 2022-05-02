@@ -1,6 +1,8 @@
 import {getRandomInteger} from '../utils.js';
 
-const COMMENTS_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+let commentIdCounter = 1;
+
+const generateCommentId = () => commentIdCounter++;
 
 const generateAuthor = () => {
   const authors = [
@@ -37,11 +39,12 @@ const generateDate = () => {
 
 const EMOJIES = ['smile', 'sleeping', 'puke', 'angry'];
 
-export const generateComment = () => ({
-  id: COMMENTS_IDS[getRandomInteger(0, COMMENTS_IDS.length-1)],
+const generateComment = () => ({
+  id: generateCommentId(),
   author: generateAuthor(),
   comment: generateText(),
   date: generateDate(),
   emotion: EMOJIES[getRandomInteger(0, EMOJIES.length-1)],
 }) ;
 
+export {commentIdCounter, generateComment};

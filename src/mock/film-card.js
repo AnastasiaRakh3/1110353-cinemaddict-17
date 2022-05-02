@@ -1,4 +1,5 @@
 import {getRandomInteger} from '../utils.js';
+import {commentIdCounter} from './comment.js';
 
 const AGE_RATING = [0, 8, 16, 21];
 const DIRECTORS = ['Стивен Аллан Спилберг', 'Мартин Чарльз Скорсезе', 'Альфред Джозеф Хичкок', 'Стэнли Кубрик'];
@@ -65,11 +66,16 @@ const countTime = (time) => {
   }
 };
 
+const getId = () => getRandomInteger(1, commentIdCounter);
+
+const getCommentsIdArray = () => {
+  const array = Array.from({length: commentIdCounter}, getId);
+  return array;
+};
+
 export const generateFilmCard = () => ({
   // id: 0,
-  // comments: [
-  //   $Comment.id$, $Comment.id$
-  // ],
+  comments: getCommentsIdArray(),
   filmInfo: {
     title: generateFilmTitle(),
     alternativeTitle: generateAlternativeFilmTitle(),
