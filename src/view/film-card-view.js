@@ -2,7 +2,7 @@ import {createElement} from '../render.js';
 import {humanizeFilmDate} from '../utils.js';
 
 const createFilmCardTemplate = (filmCard) => {
-  const {filmInfo: {title, totalRating, poster, release: {date}, runtime, genre, description}, userDetails: {watchlist, alreadyWatched, favorite}} = filmCard;
+  const {comments, filmInfo: {title, totalRating, poster, release: {date}, runtime, genre, description}, userDetails: {watchlist, alreadyWatched, favorite}} = filmCard;
 
   const inWatchListClassName = watchlist ? 'film-card__controls-item--active' : '';
   const inAlreadyWatchedClassName = alreadyWatched ? 'film-card__controls-item--active' : '';
@@ -20,7 +20,7 @@ const createFilmCardTemplate = (filmCard) => {
     </p>
     <img src="${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>
-    <span class="film-card__comments">5 comments</span>
+    <span class="film-card__comments">${comments.length} comments</span>
   </a>
   <div class="film-card__controls">
     <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${inWatchListClassName}" type="button">Add to watchlist</button>

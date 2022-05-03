@@ -10,6 +10,9 @@ const GENRES = ['Comedy', 'Drama', 'Horror'];
 const DESCRIPTIONS = ['Лучший фильм всех времен', 'Печальная истории мальчика', 'Фантастический фильм о любви'];
 const WATCHING_DATE = ['2022-03-11T12:10:32.554Z', '2019-04-12T16:12:32.554Z', '2021-01-09T21:23:32.554Z'];
 
+let filmIdCounter = 1;
+const generateFilmtId = () => filmIdCounter++;
+
 const generateFilmTitle = () => {
   const filmTitles = [
     'Убить Билла',
@@ -74,7 +77,7 @@ const getCommentsIdArray = () => {
 };
 
 export const generateFilmCard = () => ({
-  // id: 0,
+  id: generateFilmtId,
   comments: getCommentsIdArray(),
   filmInfo: {
     title: generateFilmTitle(),
