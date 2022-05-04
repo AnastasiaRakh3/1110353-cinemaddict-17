@@ -14,14 +14,14 @@ export default class FilmsPresenter {
   init = (filmsBlockContainer, filmCardsModel) => {
     this.filmsBlockContainer = filmsBlockContainer;
     this.filmCardsModel = filmCardsModel;
-    this.blockfilmCards = [...this.filmCardsModel.getFilmCards()];
+    this.filmCards = [...this.filmCardsModel.getFilmCards()];
 
     render(this.filmsBlockComponent, this.filmsBlockContainer);
     render(this.filmsListComponent, this.filmsBlockComponent.getElement(), RenderPosition.AFTERBEGIN);
     render(this.filmsListContainerComponent, this.filmsListComponent.getElement());
 
-    for (let i = 0; i < this.blockfilmCards.length; i++) {
-      render(new FilmCardView(this.blockfilmCards[i]), this.filmsListContainerComponent.getElement());
+    for (let i = 0; i < this.filmCards.length; i++) {
+      render(new FilmCardView(this.filmCards[i]), this.filmsListContainerComponent.getElement());
     }
 
     render(this.LoadMoreButtonComponent, this.filmsListComponent.getElement());

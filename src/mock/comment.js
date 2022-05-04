@@ -18,7 +18,7 @@ const generateAuthor = () => {
 const generateText = () => {
   const texts = [
     'Вах, круто!',
-    'Ужвсный фильм',
+    'Ужасный фильм',
     'Так себе',
     'Зачет!'
   ];

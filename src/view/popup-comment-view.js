@@ -2,7 +2,6 @@ import {createElement} from '../render.js';
 import {humanizeCommentDate} from '../utils.js';
 
 const createPopupCommentTemplate = (commentElement) => {
-  // Пока не вставляла id
   const {author, comment, date, emotion} = commentElement;
   const commentDate = humanizeCommentDate(date);
 

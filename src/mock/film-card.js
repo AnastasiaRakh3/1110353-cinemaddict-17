@@ -69,15 +69,10 @@ const countTime = (time) => {
   }
 };
 
-const getId = () => getRandomInteger(1, commentIdCounter);
-
-const getCommentsIdArray = () => {
-  const array = Array.from({length: commentIdCounter}, getId);
-  return array;
-};
+const getCommentsIdArray = () => Array.from({length: commentIdCounter}, () => getRandomInteger(1, commentIdCounter));
 
 export const generateFilmCard = () => ({
-  id: generateFilmtId,
+  id: generateFilmtId(),
   comments: getCommentsIdArray(),
   filmInfo: {
     title: generateFilmTitle(),
