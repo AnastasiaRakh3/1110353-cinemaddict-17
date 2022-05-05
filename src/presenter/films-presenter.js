@@ -5,9 +5,13 @@ import LoadMoreButtonView from '../view/loadmore-button-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
 import {render, RenderPosition} from '../render.js';
+import CommentsPresenter from './comments-presenter.js';
+import CommentsModel from '../model/comments-model.js';
 
 const siteMainElement = document.querySelector('.main');
 const bodyElement = document.querySelector('body');
+const commentsPresenter = new CommentsPresenter();
+const commentsModel = new CommentsModel();
 
 class FilmsPresenter {
   #filmsBlockComponent = new FilmsBlockView();
@@ -43,6 +47,8 @@ class FilmsPresenter {
     const openPopup = () => {
       siteMainComponent.appendChild(popupComponent.element);
       bodyElement.classList.add('hide-overflow');
+      const commentsList = popupComponent.element.querySelector('.film-details__comments-list');
+      commentsPresenter.init(commentsList, commentsModel);
     };
 
     const closePopup = () => {

@@ -3,7 +3,6 @@ import {humanizeFilmDate} from '../utils.js';
 
 const createFilmCardTemplate = (filmCard) => {
   const {comments, filmInfo: {title, totalRating, poster, release: {date}, runtime, genre, description}, userDetails: {watchlist, alreadyWatched, favorite}} = filmCard;
-
   const inWatchListClassName = watchlist ? 'film-card__controls-item--active' : '';
   const inAlreadyWatchedClassName = alreadyWatched ? 'film-card__controls-item--active' : '';
   const inFavoriteClassName = favorite ? 'film-card__controls-item--active' : '';

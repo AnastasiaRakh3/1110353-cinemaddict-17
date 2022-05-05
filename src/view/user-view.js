@@ -8,11 +8,11 @@ const createFiltersTemplate = () => `<section class="header__profile profile">
 export default class UserView {
   #element = null;
 
-  getTemplate() {
+  get template() {
     return createFiltersTemplate();
   }
 
-  getElement() {
+  get element() {
     if (!this.#element) {
       this.#element = createElement(this.template);
     }

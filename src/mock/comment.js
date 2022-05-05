@@ -45,6 +45,6 @@ const generateComment = () => ({
   comment: generateText(),
   date: generateDate(),
   emotion: EMOJIES[getRandomInteger(0, EMOJIES.length-1)],
-}) ;
+});
 
 export {commentIdCounter, generateComment};
