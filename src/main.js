@@ -1,4 +1,4 @@
-import NatigationView from './view/nav-view.js';
+import NavigationView from './view/nav-view.js';
 import FiltersView from './view/filters-view.js';
 import UserView from './view/user-view.js';
 import FooterStatisticsView from './view/footer-statistics.js';
@@ -22,7 +22,7 @@ const popupModel = new PopupModel();
 const popupPresenter = new PopupPresenter();
 
 render(new UserView(), siteHeaderElement);
-render(new NatigationView(), siteMainElement, RenderPosition.AFTERBEGIN);
+render(new NavigationView(), siteMainElement, RenderPosition.AFTERBEGIN);
 render(new FiltersView(), siteMainElement);
 render(new FooterStatisticsView(), footerStatisticsContainerElement);
 
