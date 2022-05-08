@@ -32,6 +32,12 @@ class FilmsPresenter {
   init = () => {
     this.#filmCards = [...this.#filmCardsModel.filmCards];
     this.#renderCards();
+
+    if(this.#filmCards.length === 0) {
+      const filmsTitle = this.#filmsListComponent.element.querySelector('.films-list__title');
+      filmsTitle.classList.remove('visually-hidden');
+      filmsTitle.textContent = 'There are no movies in our database';
+    }
   };
 
   #onLoadMoreButtonClick = () => {
