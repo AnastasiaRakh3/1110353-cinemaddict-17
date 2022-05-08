@@ -9,14 +9,14 @@ import FilmCardsModel from './model/film-cards-model.js';
 const siteHeaderElement = document.querySelector('.header');
 const footerStatisticsContainerElement = document.querySelector('.footer__statistics');
 
-const filmsPresenter = new FilmsPresenter();
 const filmCardsModel = new FilmCardsModel();
+const filmsPresenter = new FilmsPresenter(siteMainElement, filmCardsModel);
 
 render(new UserView(), siteHeaderElement);
 render(new NavigationView(), siteMainElement, RenderPosition.AFTERBEGIN);
 render(new FiltersView(), siteMainElement);
 render(new FooterStatisticsView(), footerStatisticsContainerElement);
 
-filmsPresenter.init(siteMainElement, filmCardsModel);
+filmsPresenter.init();
 
 
