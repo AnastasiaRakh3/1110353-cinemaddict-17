@@ -9,11 +9,10 @@ import CommentsPresenter from './comments-presenter.js';
 import CommentsModel from '../model/comments-model.js';
 
 const CARD_COUNT_PER_STEP = 5;
-const siteMainElement = document.querySelector('.main');
 const bodyElement = document.querySelector('body');
 const commentsPresenter = new CommentsPresenter();
 
-class FilmsPresenter {
+export default class FilmsPresenter {
   #filmsBlockComponent = new FilmsBlockView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
@@ -57,17 +56,17 @@ class FilmsPresenter {
   #renderFilmCard = (card) => {
     const cardComponent = new FilmCardView(card);
     const popupComponent = new PopupView(card);
-    const siteMainComponent = siteMainElement;
+    const bodyComponent = bodyElement;
 
     const openPopup = () => {
-      siteMainComponent.appendChild(popupComponent.element);
+      bodyComponent.appendChild(popupComponent.element);
       bodyElement.classList.add('hide-overflow');
       const commentsList = popupComponent.element.querySelector('.film-details__comments-list');
       commentsPresenter.init(commentsList, new CommentsModel());
     };
 
     const closePopup = () => {
-      siteMainComponent.removeChild(popupComponent.element);
+      bodyComponent.removeChild(popupComponent.element);
       bodyElement.classList.remove('hide-overflow');
     };
 
@@ -108,4 +107,3 @@ class FilmsPresenter {
   };
 }
 
-export { siteMainElement, FilmsPresenter };

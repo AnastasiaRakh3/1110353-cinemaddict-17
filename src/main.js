@@ -3,10 +3,11 @@ import FiltersView from './view/filters-view.js';
 import UserView from './view/user-view.js';
 import FooterStatisticsView from './view/footer-statistics.js';
 import {render, RenderPosition} from './render.js';
-import {FilmsPresenter, siteMainElement} from './presenter/films-presenter.js';
+import FilmsPresenter from './presenter/films-presenter.js';
 import FilmCardsModel from './model/film-cards-model.js';
 
 const siteHeaderElement = document.querySelector('.header');
+const siteMainElement = document.querySelector('.main');
 const footerStatisticsContainerElement = document.querySelector('.footer__statistics');
 
 const filmCardsModel = new FilmCardsModel();
