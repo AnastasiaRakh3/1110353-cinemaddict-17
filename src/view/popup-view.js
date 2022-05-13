@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePopupFilmDate} from '../utils.js';
 
 const createPopupTemplate = (filmCard) => {
@@ -122,11 +122,11 @@ const createPopupTemplate = (filmCard) => {
   </form>
   </section>`;};
 
-export default class PopupView {
-  #element = null;
+export default class PopupView extends AbstractView {
   #filmCard = null;
 
   constructor (filmCard) {
+    super();
     this.#filmCard = filmCard;
   }
 
@@ -134,14 +134,13 @@ export default class PopupView {
     return createPopupTemplate(this.#filmCard);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setPopupCloseClickHandler = (callback) => {
+    this._callback.popupCloseClick = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#popupCloseClickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #popupCloseClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.popupCloseClick();
+  };
 }
