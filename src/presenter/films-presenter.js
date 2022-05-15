@@ -4,9 +4,9 @@ import FilmsListContainerView from '../view/films-list-container-view.js';
 import LoadMoreButtonView from '../view/loadmore-button-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
-import { render, RenderPosition } from '../render.js';
 import CommentsPresenter from './comments-presenter.js';
 import CommentsModel from '../model/comments-model.js';
+import {render, RenderPosition} from '../framework/render.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const bodyElement = document.querySelector('body');
@@ -39,7 +39,7 @@ export default class FilmsPresenter {
     }
   };
 
-  #onLoadMoreButtonClick = () => {
+  #handleLoadMoreButtonClick = () => {
     const moreCards = this.#filmCards.slice(
       this.#renderedCardCount,
       this.#renderedCardCount + CARD_COUNT_PER_STEP
@@ -78,12 +78,12 @@ export default class FilmsPresenter {
       }
     };
 
-    cardComponent.element.addEventListener('click', () => {
+    cardComponent.setClickHandler(() => {
       openPopup();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+    popupComponent.setPopupCloseClickHandler(() => {
       closePopup();
       document.removeEventListener('keydown', onEscKeyDown);
     });
@@ -102,7 +102,7 @@ export default class FilmsPresenter {
 
     if (this.#filmCards.length > CARD_COUNT_PER_STEP) {
       render(this.#loadMoreButtonComponent, this.#filmsListComponent.element);
-      this.#loadMoreButtonComponent.element.addEventListener('click', this.#onLoadMoreButtonClick);
+      this.#loadMoreButtonComponent.setClickHandler(this.#handleLoadMoreButtonClick);
     }
   };
 }
