@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizePopupFilmDate} from '../utils.js';
+import {humanizePopupFilmDate} from '../utils/card.js';
 
 const createPopupTemplate = (filmCard) => {
   const {filmInfo: {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release: {date, releaseCountry}, runtime, genre, description}, userDetails: {watchlist, alreadyWatched, favorite}} = filmCard;

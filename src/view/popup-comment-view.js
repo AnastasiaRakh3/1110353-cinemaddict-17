@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeCommentDate} from '../utils.js';
+import {humanizeCommentDate} from '../utils/card.js';
 
 const createPopupCommentTemplate = (commentElement) => {
   const {author, comment, date, emotion} = commentElement;

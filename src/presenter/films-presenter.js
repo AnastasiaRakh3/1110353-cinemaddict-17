@@ -6,7 +6,7 @@ import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
 import CommentsPresenter from './comments-presenter.js';
 import CommentsModel from '../model/comments-model.js';
-import {render, RenderPosition} from '../framework/render.js';
+import {render, RenderPosition, remove} from '../framework/render.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const bodyElement = document.querySelector('body');
@@ -48,8 +48,7 @@ export default class FilmsPresenter {
     this.#renderedCardCount += CARD_COUNT_PER_STEP;
 
     if (this.#renderedCardCount >= this.#filmCards.length) {
-      this.#loadMoreButtonComponent.element.remove();
-      this.#loadMoreButtonComponent.removeElement();
+      remove(this.#loadMoreButtonComponent);
     }
   };
 
