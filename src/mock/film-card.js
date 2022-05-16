@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils.js';
+import {getRandomInteger} from '../utils/common.js';
 import {commentIdCounter} from './comment.js';
 
 const AGE_RATING = [0, 8, 16, 21];
