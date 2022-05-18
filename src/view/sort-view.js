@@ -6,7 +6,7 @@ const createSortingTemplate = () => `<ul class="sort">
 <li><a href="#" class="sort__button">Sort by rating</a></li>
 </ul>`;
 
-export default class SortingView extends AbstractView {
+export default class SortView extends AbstractView {
   get template() {
     return createSortingTemplate();
   }

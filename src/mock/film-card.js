@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import {getRandomInteger} from '../utils/common.js';
 import {commentIdCounter} from './comment.js';
 
@@ -9,9 +10,6 @@ const RELEASE_COUNTRIES = ['Russia', 'Finland', 'France'];
 const GENRES = ['Comedy', 'Drama', 'Horror'];
 const DESCRIPTIONS = ['Лучший фильм всех времен', 'Печальная истории мальчика', 'Фантастический фильм о любви'];
 const WATCHING_DATE = ['2022-03-11T12:10:32.554Z', '2019-04-12T16:12:32.554Z', '2021-01-09T21:23:32.554Z'];
-
-let filmIdCounter = 1;
-const generateFilmtId = () => filmIdCounter++;
 
 const generateFilmTitle = () => {
   const filmTitles = [
@@ -72,7 +70,7 @@ const countTime = (time) => {
 const getCommentsIdArray = () => Array.from({length: commentIdCounter}, () => getRandomInteger(1, commentIdCounter));
 
 export const generateFilmCard = () => ({
-  id: generateFilmtId(),
+  id:  nanoid(),
   comments: getCommentsIdArray(),
   filmInfo: {
     title: generateFilmTitle(),
