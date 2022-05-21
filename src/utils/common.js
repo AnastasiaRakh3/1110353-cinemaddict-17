@@ -4,13 +4,14 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const updateItem = (items, update) => {
+const updateItem = (items /*Array (films)*/, update /*updated card*/) => {
   const index = items.findIndex((item) => item.id === update.id);
 
   if (index === -1) {
     return items;
   }
 
+  // Вернет новый обновленный массив всех карточек
   return [
     ...items.slice(0, index),
     update,
