@@ -6,7 +6,7 @@ import CommentsPresenter from './comments-presenter.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
-  EDITING: 'WATCHING',
+  WATCHING: 'WATCHING',
 };
 
 const bodyElement = document.querySelector('body');
@@ -45,6 +45,9 @@ export default class FilmPresenter {
     this.#cardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
     this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
+    this.#popupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#popupComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
     // Проверка на первую отрисовку
     if (prevCardComponent === null || prevPopupComponent === null) {
@@ -52,21 +55,12 @@ export default class FilmPresenter {
       return;
     }
 
-    // if (this.#filmListContainer.contains(prevCardComponent.element)) {
-    //   replace(this.#cardComponent, prevCardComponent);
-    // }
-
-    // if (this.#bodyComponent.contains(prevPopupComponent.element)) {
-    //   replace(this.#popupComponent, prevPopupComponent);
-    // }
-
-    if (this.#mode === Mode.DEFAULT) {
-      replace(this.#cardComponent, prevCardComponent);
-    }
-
+    // Если в режиме просмотра, то попап снова перерисовыватся
     if (this.#mode === Mode.WATCHING) {
       replace(this.#popupComponent, prevPopupComponent);
     }
+
+    replace(this.#cardComponent, prevCardComponent);
 
     remove(prevCardComponent);
     remove(prevPopupComponent);
@@ -84,12 +78,12 @@ export default class FilmPresenter {
   };
 
   #openPopup = () => {
+    this.#changeMode();
     this.#bodyComponent.appendChild(this.#popupComponent.element);
     bodyElement.classList.add('hide-overflow');
     const commentsList = this.#popupComponent.element.querySelector('.film-details__comments-list');
     commentsPresenter.init(commentsList, new CommentsModel());
     document.addEventListener('keydown', this.#onEscKeyDown);
-    this.#changeMode();
     this.#mode = Mode.WATCHING;
   };
 
@@ -124,6 +118,7 @@ export default class FilmPresenter {
     });
   };
 
+  //  Вызывает метод обновления данных с правильно измененным полем favorite (обновленная карточка)
   #handleFavoriteClick = () => {
     this.#changeData({...this.#card,
       userDetails: {
