@@ -1,5 +1,5 @@
-import PopupCommentView from '../view/popup-comment-view.js';
 import {render} from '../framework/render.js';
+import PopupCommentView from '../view/popup-comment-view.js';
 
 export default class CommentsPresenter {
   #commentsContainer = null;
