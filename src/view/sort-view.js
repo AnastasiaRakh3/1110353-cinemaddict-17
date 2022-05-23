@@ -1,16 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {SortType} from '../const.js';
 
-// const checkIsActive = (el) => el.hasFocus() ? 'sort__button--active' : '';
-
-// const createSortingTemplate = () => `<ul class="sort">
-// <li><a href="#" class="sort__button ${checkIsActive()}" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
-// <li><a href="#" class="sort__button ${checkIsActive()}" data-sort-type="${SortType.DATE_UP}">Sort by date</a></li>
-// <li><a href="#" class="sort__button ${checkIsActive()}" data-sort-type="${SortType.RATING}">Sort by rating</a></li>
-// </ul>`;
-
 const createSortingTemplate = () => `<ul class="sort">
-<li><a href="#" class="sort__button" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
+<li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
 <li><a href="#" class="sort__button" data-sort-type="${SortType.DATE_UP}">Sort by date</a></li>
 <li><a href="#" class="sort__button" data-sort-type="${SortType.RATING}">Sort by rating</a></li>
 </ul>`;
@@ -30,7 +22,17 @@ export default class SortView extends AbstractView {
       return;
     }
     evt.preventDefault();
-    // this.element.classList.toggle('sort__button--active');
+    this.#checkClass();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   };
+
+  #checkClass = () => {
+    const allButtons = Array.from(document.querySelectorAll('.sort__button'));
+    allButtons.forEach((button) => {
+      button.classList.remove('sort__button--active');
+    });
+    event.target.classList.add('sort__button--active');
+  };
 }
+
+
