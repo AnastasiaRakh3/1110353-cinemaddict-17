@@ -6,6 +6,8 @@ import FilmsListContainerView from '../view/films-list-container-view.js';
 import LoadMoreButtonView from '../view/loadmore-button-view.js';
 import FilmPresenter from './film-presenter.js';
 import {updateItem} from '../utils/common.js';
+import {sortCardUp, sortCardRating} from '../utils/card.js';
+import {SortType} from '../const.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -21,6 +23,8 @@ export default class FilmsBoardPresenter {
   #filmCards = [];
   #renderedCardCount = CARD_COUNT_PER_STEP;
   #filmPresentersList = new Map();
+  #currentSortType = SortType.DEFAULT;
+  #sourcedBoardFilms = [];
 
   constructor(filmsBlockContainer, filmCardsModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
@@ -29,6 +33,7 @@ export default class FilmsBoardPresenter {
 
   init = () => {
     this.#filmCards = [...this.#filmCardsModel.filmCards];
+    this.#sourcedBoardFilms = [...this.#filmCardsModel.filmCards];
     this.#renderFilmsBoard();
 
     if (this.#filmCards.length === 0) {
@@ -51,11 +56,45 @@ export default class FilmsBoardPresenter {
 
   #handleFilmChange = (updatedCard) => {
     this.#filmCards = updateItem(this.#filmCards, updatedCard);
+    this.#sourcedBoardFilms = updateItem(this.#sourcedBoardFilms, updatedCard);
     this.#filmPresentersList.get(updatedCard.id).init(updatedCard);
+  };
+
+  #sortCards = (sortType) => {
+    // 2. Этот исходный массив задач необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardTasks
+    switch (sortType) {
+      case SortType.DATE_UP:
+        this.#filmCards.sort(sortCardUp);
+        break;
+      case SortType.RATING:
+        this.#filmCards.sort(sortCardRating);
+        break;
+      default:
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardTasks исходный массив
+        this.#filmCards = [...this.#sourcedBoardFilms];
+    }
+
+    this.#currentSortType = sortType;
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    // - Сортируем фильмы
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#sortCards(sortType);
+    // - Очищаем список
+    this.#clearFilmsSection();
+    // - Рендерим список заново
+    this.#renderFilmsSection();
   };
 
   #renderSort = () => {
     render(this.#sortComponent, this.#filmsBlockComponent.element, RenderPosition.BEFOREBEGIN);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderFilm = (card) => {
