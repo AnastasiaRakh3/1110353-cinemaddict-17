@@ -7,7 +7,7 @@ const FilterType = {
 
 const SortType = {
   DEFAULT: 'default',
-  DATE_UP: 'date-up',
+  DATE_UP: 'date',
   RATING: 'rating',
 };
 

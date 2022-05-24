@@ -3,14 +3,10 @@ import {SortType} from '../const.js';
 
 
 const createSortingTemplate = (activeSortType) => {
-  const checkIsActiveDefaultSort = activeSortType === SortType.DEFAULT ? 'sort__button--active' : '';
-  const checkIsActiveDateUpSort = activeSortType === SortType.DATE_UP ? 'sort__button--active' : '';
-  const checkIsActiveRatingSort = activeSortType === SortType.RATING ? 'sort__button--active' : '';
+  const createListElement = (sortType) => `<li><a href="#" class="sort__button ${sortType === activeSortType ? 'sort__button--active': ''}" data-sort-type="${sortType}">Sort by ${sortType}</a></li>`;
 
   return `<ul class="sort">
-  <li><a href="#" class="sort__button ${checkIsActiveDefaultSort}" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
-  <li><a href="#" class="sort__button ${checkIsActiveDateUpSort}" data-sort-type="${SortType.DATE_UP}">Sort by date</a></li>
-  <li><a href="#" class="sort__button ${checkIsActiveRatingSort}" data-sort-type="${SortType.RATING}">Sort by rating</a></li>
+  ${Object.entries(SortType).map(([, value]) => createListElement(value)).join('')}
   </ul>`;
 };
 
@@ -33,6 +29,7 @@ export default class SortView extends AbstractView {
   };
 
   #sortTypeChangeHandler = (evt) => {
+    // Проверка, что нажали именно на ссылку
     if (evt.target.tagName !== 'A') {
       return;
     }
