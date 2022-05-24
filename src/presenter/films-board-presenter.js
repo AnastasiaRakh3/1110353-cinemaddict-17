@@ -1,4 +1,4 @@
-import { render, RenderPosition, remove } from '../framework/render.js';
+import { render, RenderPosition, remove, replace } from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import FilmsBlockView from '../view/films-block-view.js';
 import FilmsListView from '../view/films-list-view.js';
@@ -15,7 +15,8 @@ export default class FilmsBoardPresenter {
   #filmsBlockContainer = null;
   #filmCardsModel = null;
 
-  #sortComponent = new SortView();
+  #currentSortType = SortType.DEFAULT;
+  #sortComponent = new SortView(this.#currentSortType);
   #filmsBlockComponent = new FilmsBlockView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
@@ -23,7 +24,6 @@ export default class FilmsBoardPresenter {
   #filmCards = [];
   #renderedCardCount = CARD_COUNT_PER_STEP;
   #filmPresentersList = new Map();
-  #currentSortType = SortType.DEFAULT;
   #sourcedBoardFilms = [];
 
   constructor(filmsBlockContainer, filmCardsModel) {
@@ -76,8 +76,13 @@ export default class FilmsBoardPresenter {
         // мы просто запишем в _boardTasks исходный массив
         this.#filmCards = [...this.#sourcedBoardFilms];
     }
-
     this.#currentSortType = sortType;
+
+    const prevSortComponent = this.#sortComponent;
+    this.#sortComponent = new SortView(this.#currentSortType);
+    replace(this.#sortComponent, prevSortComponent);
+    this.#renderSort();
+    remove(prevSortComponent);
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -95,6 +100,10 @@ export default class FilmsBoardPresenter {
   #renderSort = () => {
     render(this.#sortComponent, this.#filmsBlockComponent.element, RenderPosition.BEFOREBEGIN);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+  };
+
+  #clearSort = () => {
+    remove(this.#sortComponent);
   };
 
   #renderFilm = (card) => {
