@@ -1,11 +1,13 @@
 import { render, RenderPosition, remove } from '../framework/render.js';
-import SortView from '../view/sort-view.js';
 import FilmsBlockView from '../view/films-block-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import LoadMoreButtonView from '../view/loadmore-button-view.js';
 import FilmPresenter from './film-presenter.js';
 import {updateItem} from '../utils/common.js';
+import {sortCardUp, sortCardRating} from '../utils/card.js';
+import {SortType} from '../const.js';
+import SortPresenter from './sort-presenter.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -13,7 +15,7 @@ export default class FilmsBoardPresenter {
   #filmsBlockContainer = null;
   #filmCardsModel = null;
 
-  #sortComponent = new SortView();
+  #currentSortType = SortType.DEFAULT;
   #filmsBlockComponent = new FilmsBlockView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
@@ -21,6 +23,8 @@ export default class FilmsBoardPresenter {
   #filmCards = [];
   #renderedCardCount = CARD_COUNT_PER_STEP;
   #filmPresentersList = new Map();
+  #sourcedBoardFilms = [];
+  #sortPresenter = null;
 
   constructor(filmsBlockContainer, filmCardsModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
@@ -29,6 +33,7 @@ export default class FilmsBoardPresenter {
 
   init = () => {
     this.#filmCards = [...this.#filmCardsModel.filmCards];
+    this.#sourcedBoardFilms = [...this.#filmCardsModel.filmCards];
     this.#renderFilmsBoard();
 
     if (this.#filmCards.length === 0) {
@@ -51,11 +56,40 @@ export default class FilmsBoardPresenter {
 
   #handleFilmChange = (updatedCard) => {
     this.#filmCards = updateItem(this.#filmCards, updatedCard);
+    this.#sourcedBoardFilms = updateItem(this.#sourcedBoardFilms, updatedCard);
     this.#filmPresentersList.get(updatedCard.id).init(updatedCard);
   };
 
-  #renderSort = () => {
-    render(this.#sortComponent, this.#filmsBlockComponent.element, RenderPosition.BEFOREBEGIN);
+  #sortCards = () => {
+    // 2. Этот исходный массив задач необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardTasks
+    switch (this.#currentSortType) {
+      case SortType.DATE_UP:
+        this.#filmCards.sort(sortCardUp);
+        break;
+      case SortType.RATING:
+        this.#filmCards.sort(sortCardRating);
+        break;
+      default:
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardTasks исходный массив
+        this.#filmCards = [...this.#sourcedBoardFilms];
+    }
+  };
+
+  // - Сортируем фильмы
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#currentSortType = sortType;
+    this.#sortCards();
+    this.#sortPresenter.init(this.#currentSortType);
+
+    this.#clearFilmsSection();
+    this.#renderFilmsSection();
+
   };
 
   #renderFilm = (card) => {
@@ -102,6 +136,7 @@ export default class FilmsBoardPresenter {
 
   #renderFilmsBoard = () => {
     this.#renderFilmsSection();
-    this.#renderSort();
+    this.#sortPresenter = new SortPresenter(this.#filmsBlockComponent.element, this.#handleSortTypeChange);
+    this.#sortPresenter.init(this.#currentSortType);
   };
 }
