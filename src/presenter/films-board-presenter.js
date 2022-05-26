@@ -88,8 +88,7 @@ export default class FilmsBoardPresenter {
     this.#sortPresenter.init(this.#currentSortType);
 
     this.#clearFilmsSection();
-    this.#renderFilmsSection();
-
+    this.#renderFilmsSection(this.#renderedCardCount);
   };
 
   #renderFilm = (card) => {
@@ -116,25 +115,32 @@ export default class FilmsBoardPresenter {
   };
 
   #clearFilmsSection = () => {
+    // Обходит карту(кол-цию) с презентерами вьюх и удаляет карточку и попап с методом destroy, который мы создали в film-presenter, но элементы еще есть, просто пустые
     this.#filmPresentersList.forEach((presenter) => presenter.destroy());
+    // Очищает мапу, удаляет все элементы, она становится пустая
     this.#filmPresentersList.clear();
-    this.#renderedCardCount = CARD_COUNT_PER_STEP;
+    // Ко-во нужных отрисованных карточек становится снова 5 (Зачем нужно было?)
+    // this.#renderedCardCount = CARD_COUNT_PER_STEP;
+    // Удаляет кнопку 'Загрузить еще' (Зачем?, просто занова ее перересовывать не может?)
     remove(this.#loadMoreButtonComponent);
   };
 
-  #renderFilmsSection = () => {
-    render(this.#filmsBlockComponent, this.#filmsBlockContainer);
-    render(this.#filmsListComponent, this.#filmsBlockComponent.element, RenderPosition.AFTERBEGIN);
-    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+  #renderFilmsSection = (neededCards = CARD_COUNT_PER_STEP) => {
+    // Заново отрисуется карточки до 5ти (Зачем Math.min? тк CARD_COUNT_PER_STEP могут сделать случайно отрицательным?)
+    this.#renderFilms(0, Math.min(this.#filmCards.length, neededCards));
 
-    this.#renderFilms(0, Math.min(this.#filmCards.length, CARD_COUNT_PER_STEP));
-
-    if (this.#filmCards.length > CARD_COUNT_PER_STEP) {
+    // Проверка, если карточек с браузера больше чем 5,то рисуем кнопку, а если меньше 5, кнопка не нужна
+    // Проверка, если карточек с браузера больше чем отрисованных карточек,то рисуем кнопку, а если нет, то кнопка не нужна
+    if (this.#filmCards.length > neededCards) {
       this.#renderLoadMoreButton();
     }
   };
 
   #renderFilmsBoard = () => {
+    render(this.#filmsBlockComponent, this.#filmsBlockContainer);
+    render(this.#filmsListComponent, this.#filmsBlockComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+
     this.#renderFilmsSection();
     this.#sortPresenter = new SortPresenter(this.#filmsBlockComponent.element, this.#handleSortTypeChange);
     this.#sortPresenter.init(this.#currentSortType);
