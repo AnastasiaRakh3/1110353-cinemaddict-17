@@ -61,9 +61,7 @@ export default class FilmsBoardPresenter {
   };
 
   #sortCards = () => {
-    // 2. Этот исходный массив задач необходим,
-    // потому что для сортировки мы будем мутировать
-    // массив в свойстве _boardTasks
+    // здесь мутируем массив в свойстве _filmCards
     switch (this.#currentSortType) {
       case SortType.DATE_UP:
         this.#filmCards.sort(sortCardUp);
@@ -72,19 +70,21 @@ export default class FilmsBoardPresenter {
         this.#filmCards.sort(sortCardRating);
         break;
       default:
-        // 3. А когда пользователь захочет "вернуть всё, как было",
-        // мы просто запишем в _boardTasks исходный массив
+        // если пользователь захочет "вернуть всё, как было", мы просто запишем в _filmCards исходный массив
         this.#filmCards = [...this.#sourcedBoardFilms];
     }
   };
 
   // - Сортируем фильмы
   #handleSortTypeChange = (sortType) => {
+    // Если нажата уже влюченная сортировка, сразу выходим, ничего не делая
     if (this.#currentSortType === sortType) {
       return;
     }
     this.#currentSortType = sortType;
+    // Определяем какой должен быть массив this.#filmCards, чтобы потом отрисовать карточки в нужном порядке
     this.#sortCards();
+    // Отрисовываем сортировку, где навешен лисенер на все случаи
     this.#sortPresenter.init(this.#currentSortType);
 
     this.#clearFilmsSection();
@@ -121,15 +121,14 @@ export default class FilmsBoardPresenter {
     this.#filmPresentersList.clear();
     // Ко-во нужных отрисованных карточек становится снова 5 (Зачем нужно было?)
     // this.#renderedCardCount = CARD_COUNT_PER_STEP;
-    // Удаляет кнопку 'Загрузить еще' (Зачем?, просто занова ее перересовывать не может?)
+    // Удаляет кнопку 'Загрузить еще' (Зачем? у нас же она удаляется в handleLoadMoreButtonClick)
     remove(this.#loadMoreButtonComponent);
   };
 
   #renderFilmsSection = (neededCards = CARD_COUNT_PER_STEP) => {
-    // Заново отрисуется карточки до 5ти (Зачем Math.min? тк CARD_COUNT_PER_STEP могут сделать случайно отрицательным?)
+    // Заново отрисуется карточки нужного ко-ва (Зачем Math.min? тк CARD_COUNT_PER_STEP могут сделать случайно отрицательным?)
     this.#renderFilms(0, Math.min(this.#filmCards.length, neededCards));
 
-    // Проверка, если карточек с браузера больше чем 5,то рисуем кнопку, а если меньше 5, кнопка не нужна
     // Проверка, если карточек с браузера больше чем отрисованных карточек,то рисуем кнопку, а если нет, то кнопка не нужна
     if (this.#filmCards.length > neededCards) {
       this.#renderLoadMoreButton();
