@@ -1,6 +1,10 @@
 import {render, remove, replace} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
+// import PopupCommentView from '../view/popup-comment-view.js';
+// import PopupCommentsListView from '../view/popup-comments-block.js';
+
+// import PopupCommentsBlockView from '../view/popup-comments-block.js';
 import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
 
@@ -10,7 +14,6 @@ const Mode = {
 };
 
 const bodyElement = document.querySelector('body');
-const commentsPresenter = new CommentsPresenter();
 
 export default class FilmPresenter {
   #filmListContainer = null;
@@ -22,6 +25,8 @@ export default class FilmPresenter {
 
   #cardComponent = null;
   #popupComponent = null;
+  #commentsPresenter = null;
+  // #popupCommentsBlockComponent = null;
   #bodyComponent = bodyElement;
 
   constructor(filmListContainer, changeData, changeMode) {
@@ -38,6 +43,8 @@ export default class FilmPresenter {
 
     this.#cardComponent = new FilmCardView(card);
     this.#popupComponent = new PopupView(card);
+
+    this.#commentsPresenter = new CommentsPresenter(new CommentsModel(), this.#popupComponent.element.querySelector('.film-details__top-container'));
 
     this.#cardComponent.setClickHandler(this.#handleCardClick);
     this.#cardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
@@ -81,8 +88,7 @@ export default class FilmPresenter {
     this.#changeMode();
     this.#bodyComponent.appendChild(this.#popupComponent.element);
     bodyElement.classList.add('hide-overflow');
-    const commentsList = this.#popupComponent.element.querySelector('.film-details__comments-list');
-    commentsPresenter.init(commentsList, new CommentsModel());
+    this.#commentsPresenter.init();
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.WATCHING;
   };
