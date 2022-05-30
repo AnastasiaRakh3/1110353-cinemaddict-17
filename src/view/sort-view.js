@@ -1,12 +1,14 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {SortType} from '../const.js';
 
+// Чтобы гарантировать порядок сортировки
+const SortOrder = [SortType.DEFAULT, SortType.DATE_UP, SortType.RATING];
 
 const createSortingTemplate = (activeSortType) => {
   const createListElement = (sortType) => `<li><a href="#" class="sort__button ${sortType === activeSortType ? 'sort__button--active': ''}" data-sort-type="${sortType}">Sort by ${sortType}</a></li>`;
 
   return `<ul class="sort">
-  ${Object.entries(SortType).map(([, value]) => createListElement(value)).join('')}
+  ${SortOrder.map((sort) => createListElement(sort)).join('')}
   </ul>`;
 };
 

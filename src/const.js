@@ -11,4 +11,11 @@ const SortType = {
   RATING: 'rating',
 };
 
-export {FilterType, SortType};
+const Emotion = {
+  SMILE: 'smile',
+  SLEEPING: 'sleeping',
+  PUKE: 'puke',
+  ANGRY: 'angry',
+};
+
+export {FilterType, SortType, Emotion};
