@@ -1,10 +1,6 @@
 import {render, remove, replace} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
-// import PopupCommentView from '../view/popup-comment-view.js';
-// import PopupCommentsListView from '../view/popup-comments-block.js';
-
-// import PopupCommentsBlockView from '../view/popup-comments-block.js';
 import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
 
@@ -26,7 +22,6 @@ export default class FilmPresenter {
   #cardComponent = null;
   #popupComponent = null;
   #commentsPresenter = null;
-  // #popupCommentsBlockComponent = null;
   #bodyComponent = bodyElement;
 
   constructor(filmListContainer, changeData, changeMode) {

@@ -1,5 +1,9 @@
 import dayjs from 'dayjs';
+// для поддержки работы с продолжительностью
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
+const showFilmRunTime = (time) => dayjs.duration(time, 'minutes').format('H[h] mm[m]');
 const humanizeFilmDate = (dueDate) => dayjs(dueDate).format('YYYY');
 const humanizePopupFilmDate = (dueDate) => dayjs(dueDate).format('DD MMMM YYYY');
 const humanizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/DD HH:mm');
@@ -29,4 +33,4 @@ const sortCardUp = (cardA, cardB) => {
 
 const sortCardRating = (cardA, cardB) => cardA.filmInfo.totalRating - cardB.filmInfo.totalRating;
 
-export {humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, sortCardUp, sortCardRating};
+export {humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, sortCardUp, sortCardRating, showFilmRunTime};
