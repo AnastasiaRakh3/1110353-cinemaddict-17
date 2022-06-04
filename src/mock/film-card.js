@@ -53,20 +53,6 @@ const generateFilmReleaseDate = () => {
   return filmDates[randomIndex];
 };
 
-const countTime = (time) => {
-  const hours = Math.trunc(time/60);
-  const minutes = time%60;
-
-  switch (true) {
-    case Boolean(hours && minutes):
-      return `${hours}h ${minutes}m`;
-    case Boolean(hours):
-      return `${hours}h`;
-    case Boolean(minutes):
-      return `${minutes}m`;
-  }
-};
-
 const getCommentsIdArray = () => Array.from({length: commentIdCounter}, () => getRandomInteger(1, commentIdCounter));
 
 export const generateFilmCard = () => ({
@@ -89,7 +75,7 @@ export const generateFilmCard = () => ({
       date: generateFilmReleaseDate(),
       releaseCountry: RELEASE_COUNTRIES[getRandomInteger(0, RELEASE_COUNTRIES.length -1)]
     },
-    runtime: countTime(getRandomInteger(45, 140)),
+    runtime: getRandomInteger(1, 140),
     genre: [
       GENRES[getRandomInteger(0, GENRES.length -1)]
     ],

@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeFilmDate} from '../utils/card.js';
+import {humanizeFilmDate, showFilmRunTime} from '../utils/card.js';
 
 const createFilmCardTemplate = (filmCard) => {
   const {comments, filmInfo: {title, totalRating, poster, release: {date}, runtime, genre, description}, userDetails: {watchlist, alreadyWatched, favorite}} = filmCard;
@@ -7,6 +7,12 @@ const createFilmCardTemplate = (filmCard) => {
   const inAlreadyWatchedClassName = alreadyWatched ? 'film-card__controls-item--active' : '';
   const inFavoriteClassName = favorite ? 'film-card__controls-item--active' : '';
   const releaseFilmDate = humanizeFilmDate(date);
+  const checkFilmRunTime = (time) => {
+    if(time.includes('0h ')) {
+      return time.substr(3);
+    }
+    return time;
+  };
 
   return `<article class="film-card">
   <a class="film-card__link">
@@ -14,7 +20,7 @@ const createFilmCardTemplate = (filmCard) => {
     <p class="film-card__rating">${totalRating}</p>
     <p class="film-card__info">
       <span class="film-card__year">${releaseFilmDate}</span>
-      <span class="film-card__duration">${runtime}</span>
+      <span class="film-card__duration">${checkFilmRunTime(showFilmRunTime(runtime))}</span>
       <span class="film-card__genre">${genre}</span>
     </p>
     <img src="${poster}" alt="" class="film-card__poster">
