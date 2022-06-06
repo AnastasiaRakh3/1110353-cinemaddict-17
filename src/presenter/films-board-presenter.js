@@ -4,7 +4,6 @@ import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import LoadMoreButtonView from '../view/loadmore-button-view.js';
 import FilmPresenter from './film-presenter.js';
-import {updateItem} from '../utils/common.js';
 import {sortCardUp, sortCardRating} from '../utils/card.js';
 import {SortType} from '../const.js';
 import SortPresenter from './sort-presenter.js';
@@ -20,10 +19,8 @@ export default class FilmsBoardPresenter {
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
   #loadMoreButtonComponent = new LoadMoreButtonView();
-  #filmCards = [];
   #renderedCardCount = CARD_COUNT_PER_STEP;
   #filmPresentersList = new Map();
-  #sourcedBoardFilms = [];
   #sortPresenter = null;
 
   constructor(filmsBlockContainer, filmCardsModel) {
@@ -31,21 +28,32 @@ export default class FilmsBoardPresenter {
     this.#filmCardsModel = filmCardsModel;
   }
 
+  get filmsCards() {
+    switch (this.#currentSortType) {
+      case SortType.DATE_UP:
+        return [...this.#filmCardsModel.filmCards].sort(sortCardUp);
+      case SortType.RATING:
+        return [...this.#filmCardsModel.filmCards].sort(sortCardRating);
+    }
+    return this.#filmCardsModel.filmCards;
+  }
+
   init = () => {
-    this.#filmCards = [...this.#filmCardsModel.filmCards];
-    this.#sourcedBoardFilms = [...this.#filmCardsModel.filmCards];
     this.#renderFilmsBoard();
 
-    if (this.#filmCards.length === 0) {
-      this.#renderNoCards();
-    }
+    // if (this.#filmCards.length === 0) {
+    //   this.#renderNoCards();
+    // }
   };
 
   #handleLoadMoreButtonClick = () => {
-    this.#renderFilms(this.#renderedCardCount, this.#renderedCardCount + CARD_COUNT_PER_STEP);
-    this.#renderedCardCount += CARD_COUNT_PER_STEP;
+    const cardCount = this.filmsCards.length;
+    const newRenderedCardCount = Math.min(cardCount, this.#renderedCardCount + CARD_COUNT_PER_STEP);
+    const filmCards = this.filmsCards.slice(this.#renderedCardCount, newRenderedCardCount);
+    this.#renderFilms(filmCards);
+    this.#renderedCardCount = newRenderedCardCount;
 
-    if (this.#renderedCardCount >= this.#filmCards.length) {
+    if (this.#renderedCardCount >= cardCount) {
       remove(this.#loadMoreButtonComponent);
     }
   };
@@ -55,24 +63,8 @@ export default class FilmsBoardPresenter {
   };
 
   #handleFilmChange = (updatedCard) => {
-    this.#filmCards = updateItem(this.#filmCards, updatedCard);
-    this.#sourcedBoardFilms = updateItem(this.#sourcedBoardFilms, updatedCard);
+    // Здесь будем вызывать обновление модели
     this.#filmPresentersList.get(updatedCard.id).init(updatedCard);
-  };
-
-  #sortCards = () => {
-    // здесь мутируем массив в свойстве _filmCards
-    switch (this.#currentSortType) {
-      case SortType.DATE_UP:
-        this.#filmCards.sort(sortCardUp);
-        break;
-      case SortType.RATING:
-        this.#filmCards.sort(sortCardRating);
-        break;
-      default:
-        // если пользователь захочет "вернуть всё, как было", мы просто запишем в _filmCards исходный массив
-        this.#filmCards = [...this.#sourcedBoardFilms];
-    }
   };
 
   // - Сортируем фильмы
@@ -82,8 +74,6 @@ export default class FilmsBoardPresenter {
       return;
     }
     this.#currentSortType = sortType;
-    // Определяем какой должен быть массив this.#filmCards, чтобы потом отрисовать карточки в нужном порядке
-    this.#sortCards();
     // Отрисовываем сортировку, где навешен лисенер на все случаи
     this.#sortPresenter.init(this.#currentSortType);
 
@@ -97,10 +87,8 @@ export default class FilmsBoardPresenter {
     this.#filmPresentersList.set(card.id, filmPresenter);
   };
 
-  #renderFilms = (from, to) => {
-    this.#filmCards
-      .slice(from, to)
-      .forEach((card) => this.#renderFilm(card));
+  #renderFilms = (cards) => {
+    cards.forEach((card) => this.#renderFilm(card));
   };
 
   #renderNoCards = () => {
@@ -126,11 +114,12 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilmsSection = (neededCards = CARD_COUNT_PER_STEP) => {
-    // Заново отрисуется карточки нужного ко-ва (Зачем Math.min? тк CARD_COUNT_PER_STEP могут сделать случайно отрицательным?)
-    this.#renderFilms(0, Math.min(this.#filmCards.length, neededCards));
+    const cardCount = this.filmCards.length;
+    const cards = this.filmCards.slice(0, Math.min(cardCount, neededCards));
 
-    // Проверка, если карточек с браузера больше чем отрисованных карточек,то рисуем кнопку, а если нет, то кнопка не нужна
-    if (this.#filmCards.length > neededCards) {
+    this.#renderFilms(cards);
+
+    if (cardCount > neededCards) {
       this.#renderLoadMoreButton();
     }
   };
