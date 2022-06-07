@@ -34,8 +34,4 @@ export default class SortPresenter {
   #handleSortClick = (newSortType) => {
     this.#changeData(newSortType);
   };
-
-  destroy = () => {
-    remove(this.#sortComponent);
-  };
 }

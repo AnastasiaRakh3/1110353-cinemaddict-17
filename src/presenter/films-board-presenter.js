@@ -48,9 +48,9 @@ export default class FilmsBoardPresenter {
   };
 
   #handleLoadMoreButtonClick = () => {
-    const cardCount = this.filmsCards.length;
+    const cardCount = this.filmCards.length;
     const newRenderedCardCount = Math.min(cardCount, this.#renderedCardCount + CARD_COUNT_PER_STEP);
-    const filmCards = this.filmsCards.slice(this.#renderedCardCount, newRenderedCardCount);
+    const filmCards = this.filmCards.slice(this.#renderedCardCount, newRenderedCardCount);
     this.#renderFilms(filmCards);
     this.#renderedCardCount = newRenderedCardCount;
 
@@ -101,6 +101,8 @@ export default class FilmsBoardPresenter {
     this.#currentSortType = sortType;
     // Отрисовываем сортировку, где навешен лисенер на все случаи
     this.#sortPresenter.init(this.#currentSortType);
+    this.#clearFilmsSection();
+    this.#renderFilmsSection();
   };
 
   #renderFilm = (card) => {
@@ -157,11 +159,10 @@ export default class FilmsBoardPresenter {
     }
   };
 
-  #clearFilmsBoard = ({resetRenderedCardCount = false, resetSortType = false} = {}) => {
+  #clearFilmsSection = ({resetRenderedCardCount = false, resetSortType = false} = {}) => {
     this.#filmPresentersList.forEach((presenter) => presenter.destroy());
     this.#filmPresentersList.clear();
 
-    this.#sortPresenter.destroy();
     remove(this.#loadMoreButtonComponent);
 
     if(resetRenderedCardCount) {
