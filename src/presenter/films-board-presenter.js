@@ -5,7 +5,7 @@ import FilmsListContainerView from '../view/films-list-container-view.js';
 import LoadMoreButtonView from '../view/loadmore-button-view.js';
 import FilmPresenter from './film-presenter.js';
 import {sortCardUp, sortCardRating} from '../utils/card.js';
-import {SortType} from '../const.js';
+import {SortType, UpdateType, UserAction} from '../const.js';
 import SortPresenter from './sort-presenter.js';
 
 const CARD_COUNT_PER_STEP = 5;
@@ -26,6 +26,7 @@ export default class FilmsBoardPresenter {
   constructor(filmsBlockContainer, filmCardsModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
     this.#filmCardsModel = filmCardsModel;
+    this.#filmCardsModel.addObserver(this.#handleModelEvent)
   }
 
   get filmsCards() {
@@ -62,9 +63,33 @@ export default class FilmsBoardPresenter {
     this.#filmPresentersList.forEach((presenter) => presenter.resetView());
   };
 
-  #handleFilmChange = (updatedCard) => {
-    // Здесь будем вызывать обновление модели
-    this.#filmPresentersList.get(updatedCard.id).init(updatedCard);
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+    this.#filmCardsModel.updateCard(updateType, update);
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#filmPresentersList.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   };
 
   // - Сортируем фильмы
@@ -76,13 +101,10 @@ export default class FilmsBoardPresenter {
     this.#currentSortType = sortType;
     // Отрисовываем сортировку, где навешен лисенер на все случаи
     this.#sortPresenter.init(this.#currentSortType);
-
-    this.#clearFilmsSection();
-    this.#renderFilmsSection(this.#renderedCardCount);
   };
 
   #renderFilm = (card) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent.element, this.#handleFilmChange, this.#handleModeChange);
+    const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent.element, this.#handleViewAction, this.#handleModeChange);
     filmPresenter.init(card);
     this.#filmPresentersList.set(card.id, filmPresenter);
   };
@@ -102,29 +124,62 @@ export default class FilmsBoardPresenter {
     this.#loadMoreButtonComponent.setClickHandler(this.#handleLoadMoreButtonClick);
   };
 
-  #clearFilmsSection = () => {
-    // Обходит карту(кол-цию) с презентерами вьюх и удаляет карточку и попап с методом destroy, который мы создали в film-presenter, но элементы еще есть, просто пустые
-    this.#filmPresentersList.forEach((presenter) => presenter.destroy());
-    // Очищает мапу, удаляет все элементы, она становится пустая
-    this.#filmPresentersList.clear();
-    // Ко-во нужных отрисованных карточек становится снова 5 (Зачем нужно было?)
-    // this.#renderedCardCount = CARD_COUNT_PER_STEP;
-    // Удаляет кнопку 'Загрузить еще' (Зачем? у нас же она удаляется в handleLoadMoreButtonClick)
-    remove(this.#loadMoreButtonComponent);
-  };
+  // #clearFilmsSection = () => {
+  //   // Обходит карту(кол-цию) с презентерами вьюх и удаляет карточку и попап с методом destroy, который мы создали в film-presenter, но элементы еще есть, просто пустые
+  //   this.#filmPresentersList.forEach((presenter) => presenter.destroy());
+  //   // Очищает мапу, удаляет все элементы, она становится пустая
+  //   this.#filmPresentersList.clear();
+  //   // Ко-во нужных отрисованных карточек становится снова 5 (Зачем нужно было?)
+  //   // this.#renderedCardCount = CARD_COUNT_PER_STEP;
+  //   // Удаляет кнопку 'Загрузить еще' (Зачем? у нас же она удаляется в handleLoadMoreButtonClick)
+  //   remove(this.#loadMoreButtonComponent);
+  // };
 
-  #renderFilmsSection = (neededCards = CARD_COUNT_PER_STEP) => {
+  // #renderFilmsSection = (neededCards = CARD_COUNT_PER_STEP) => {
+  //   const cardCount = this.filmCards.length;
+  //   const cards = this.filmCards.slice(0, Math.min(cardCount, neededCards));
+
+  //   this.#renderFilms(cards);
+
+  //   if (cardCount > neededCards) {
+  //     this.#renderLoadMoreButton();
+  //   }
+  // };
+
+  #renderFilmsSection = () => {
     const cardCount = this.filmCards.length;
-    const cards = this.filmCards.slice(0, Math.min(cardCount, neededCards));
+    const cardsToRender = this.filmCards.slice(0, Math.min(cardCount, CARD_COUNT_PER_STEP));
 
-    this.#renderFilms(cards);
+    this.#renderFilms(cardsToRender);
 
-    if (cardCount > neededCards) {
+    if (cardsToRender.length < CARD_COUNT_PER_STEP) {
       this.#renderLoadMoreButton();
     }
   };
 
+  #clearFilmsBoard = ({resetRenderedCardCount = false, resetSortType = false} = {}) => {
+    this.#cardCount = this.filmsCards.length;
+    this.#filmPresentersList.forEach((presenter) => presenter.destroy());
+    this.#filmPresentersList.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#loadMoreButtonComponent);
+
+    if(resetRenderedCardCount) {
+      this.#renderedCardCount = CARD_COUNT_PER_STEP;
+    } else {
+      this.#renderedCardCount = Math.min(cardCount, this.#renderedCardCount);
+    }
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DEFAULT;
+    }
+  };
+
   #renderFilmsBoard = () => {
+    const cards = this.filmsCards;
+    const cardCount = cards.length;
+
     render(this.#filmsBlockComponent, this.#filmsBlockContainer);
     render(this.#filmsListComponent, this.#filmsBlockComponent.element, RenderPosition.AFTERBEGIN);
     render(this.#filmsListContainerComponent, this.#filmsListComponent.element);

@@ -7,4 +7,20 @@ export default class FilmCardsModel extends Observable {
   get filmCards() {
     return this.#filmsCards;
   }
+
+  updateCard = (updateType, updatedCard) => {
+    const index = this.#filmsCards.findIndex((card) => card.id === updatedCard.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting card');
+    }
+
+    this.#filmsCards = [
+      ...this.#filmsCards.slice(0, index),
+      updatedCard,
+      ...this.#filmsCards.slice(index + 1),
+    ];
+
+    this._notify(updateType, updatedCard);
+  };
 }

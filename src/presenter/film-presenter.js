@@ -3,6 +3,7 @@ import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -104,28 +105,34 @@ export default class FilmPresenter {
   };
 
   #handleWatchlistClick = () => {
-    this.#changeData({...this.#card,
-      userDetails: {
-        ...this.#card.userDetails,
-        watchlist: !this.#card.userDetails.watchlist,}
-    });
+    this.#changeData(UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      {...this.#card,
+        userDetails: {
+          ...this.#card.userDetails,
+          watchlist: !this.#card.userDetails.watchlist,}
+      });
   };
 
   #handleAlreadyWatchedClick = () => {
-    this.#changeData({...this.#card,
-      userDetails: {
-        ...this.#card.userDetails,
-        alreadyWatched: !this.#card.userDetails.alreadyWatched,}
-    });
+    this.#changeData(UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      {...this.#card,
+        userDetails: {
+          ...this.#card.userDetails,
+          alreadyWatched: !this.#card.userDetails.alreadyWatched,}
+      });
   };
 
   //  Вызывает метод обновления данных с правильно измененным полем favorite (обновленная карточка)
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#card,
-      userDetails: {
-        ...this.#card.userDetails,
-        favorite: !this.#card.userDetails.favorite,}
-    });
+    this.#changeData(UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      {...this.#card,
+        userDetails: {
+          ...this.#card.userDetails,
+          favorite: !this.#card.userDetails.favorite,}
+      });
   };
 
   #handleCardClick = () => {
