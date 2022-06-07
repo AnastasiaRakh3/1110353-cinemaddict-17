@@ -106,7 +106,7 @@ export default class FilmPresenter {
 
   #handleWatchlistClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#card,
         userDetails: {
           ...this.#card.userDetails,
@@ -116,7 +116,7 @@ export default class FilmPresenter {
 
   #handleAlreadyWatchedClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#card,
         userDetails: {
           ...this.#card.userDetails,
@@ -127,7 +127,7 @@ export default class FilmPresenter {
   //  Вызывает метод обновления данных с правильно измененным полем favorite (обновленная карточка)
   #handleFavoriteClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#card,
         userDetails: {
           ...this.#card.userDetails,

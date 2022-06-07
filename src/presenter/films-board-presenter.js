@@ -26,10 +26,10 @@ export default class FilmsBoardPresenter {
   constructor(filmsBlockContainer, filmCardsModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
     this.#filmCardsModel = filmCardsModel;
-    this.#filmCardsModel.addObserver(this.#handleModelEvent)
+    this.#filmCardsModel.addObserver(this.#handleModelEvent);
   }
 
-  get filmsCards() {
+  get filmCards() {
     switch (this.#currentSortType) {
       case SortType.DATE_UP:
         return [...this.#filmCardsModel.filmCards].sort(sortCardUp);
@@ -148,27 +148,24 @@ export default class FilmsBoardPresenter {
 
   #renderFilmsSection = () => {
     const cardCount = this.filmCards.length;
-    const cardsToRender = this.filmCards.slice(0, Math.min(cardCount, CARD_COUNT_PER_STEP));
+    const cardsToRender = this.filmCards.slice(0, this.#renderedCardCount);
 
     this.#renderFilms(cardsToRender);
 
-    if (cardsToRender.length < CARD_COUNT_PER_STEP) {
+    if (cardsToRender.length < cardCount) {
       this.#renderLoadMoreButton();
     }
   };
 
   #clearFilmsBoard = ({resetRenderedCardCount = false, resetSortType = false} = {}) => {
-    this.#cardCount = this.filmsCards.length;
     this.#filmPresentersList.forEach((presenter) => presenter.destroy());
     this.#filmPresentersList.clear();
 
-    remove(this.#sortComponent);
+    this.#sortPresenter.destroy();
     remove(this.#loadMoreButtonComponent);
 
     if(resetRenderedCardCount) {
       this.#renderedCardCount = CARD_COUNT_PER_STEP;
-    } else {
-      this.#renderedCardCount = Math.min(cardCount, this.#renderedCardCount);
     }
 
     if (resetSortType) {
@@ -177,9 +174,6 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilmsBoard = () => {
-    const cards = this.filmsCards;
-    const cardCount = cards.length;
-
     render(this.#filmsBlockComponent, this.#filmsBlockContainer);
     render(this.#filmsListComponent, this.#filmsBlockComponent.element, RenderPosition.AFTERBEGIN);
     render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
