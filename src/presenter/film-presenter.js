@@ -74,6 +74,7 @@ export default class FilmPresenter {
     remove(this.#popupComponent);
   };
 
+  // Метод закрывает открытый попап
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#closePopup();
@@ -81,6 +82,7 @@ export default class FilmPresenter {
   };
 
   #openPopup = () => {
+    // ?? Где этот метод?
     this.#changeMode();
     this.#bodyComponent.appendChild(this.#popupComponent.element);
     bodyElement.classList.add('hide-overflow');
