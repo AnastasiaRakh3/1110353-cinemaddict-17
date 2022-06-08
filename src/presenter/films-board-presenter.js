@@ -7,12 +7,14 @@ import FilmPresenter from './film-presenter.js';
 import {sortCardUp, sortCardRating} from '../utils/card.js';
 import {SortType, UpdateType} from '../const.js';
 import SortPresenter from './sort-presenter.js';
+import { filter } from '../utils/filter.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
 export default class FilmsBoardPresenter {
   #filmsBlockContainer = null;
   #filmCardsModel = null;
+  #filtersModel = null;
 
   #currentSortType = SortType.DEFAULT;
   #filmsBlockComponent = new FilmsBlockView();
@@ -23,21 +25,28 @@ export default class FilmsBoardPresenter {
   #filmPresentersList = new Map();
   #sortPresenter = null;
 
-  constructor(filmsBlockContainer, filmCardsModel) {
+  constructor(filmsBlockContainer, filmCardsModel, filtersModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
     this.#filmCardsModel = filmCardsModel;
+    this.#filtersModel = filtersModel;
+
     this.#filmCardsModel.addObserver(this.#handleModelEvent);
+    this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   // Геттер, возвращающий массив карточек в нужном порядке, в зависимости какая сортировка включена
   get filmCards() {
+    const filterType = this.#filtersModel.filter;
+    const cards = this.#filmCardsModel.filmCards;
+    const filteredCards = filter[filterType](cards);
+
     switch (this.#currentSortType) {
       case SortType.DATE_UP:
-        return [...this.#filmCardsModel.filmCards].sort(sortCardUp);
+        return filteredCards.sort(sortCardUp);
       case SortType.RATING:
-        return [...this.#filmCardsModel.filmCards].sort(sortCardRating);
+        return filteredCards.sort(sortCardRating);
     }
-    return this.#filmCardsModel.filmCards;
+    return filteredCards;
   }
 
   init = () => {
@@ -52,17 +61,16 @@ export default class FilmsBoardPresenter {
   #handleLoadMoreButtonClick = () => {
     // Считаем ко-во всех карточек в отсортированном массиве, который взяли из геттера
     const cardCount = this.filmCards.length;
-    // Считаем ко-во новых карточек, которые отрисуются при нажатии кнопки
-    // С Math.min проверяем нужно ли нам рисовать еще +5 карточек, тк newRenderedCardCount не может быть больше длины всех карточек.Например: всего 12 карточек, отрисовано 10, при нажатии кнопки будет не 15, а 12
+    // Считаем ко-во карточек, которые отрисуются при нажатии кнопки
+    // С Math.min проверяем нужно ли нам рисовать еще +5 карточек, тк newRenderedCardCount не может быть больше длины всех карточек. Например: всего 12 карточек, отрисовано 10, при нажатии кнопки будет не 15, а 12
     const newRenderedCardCount = Math.min(cardCount, this.#renderedCardCount + CARD_COUNT_PER_STEP);
-    // Считаем ко-во карточек, которые нужно еще отрисовать
+    // Считаем ко-во новых карточек, которые нужно еще отрисовать
     const moreCardsToRender = this.filmCards.slice(this.#renderedCardCount, newRenderedCardCount);
     this.#renderFilms(moreCardsToRender);
     this.#renderedCardCount = newRenderedCardCount;
 
     // Если длина отрисованных карточек больше или равна ко-ву всех карточек в массиве, убираем кнопку
-    // ?? Можно ли на === поменять, у нас же кол-во отрис.карточек не может быть больше всех карточек?
-    if (this.#renderedCardCount >= cardCount) {
+    if (this.#renderedCardCount === cardCount) {
       remove(this.#loadMoreButtonComponent);
     }
   };
@@ -82,7 +90,6 @@ export default class FilmsBoardPresenter {
   };
 
   // Метод, который добавим в наблюдатель
-  // ?? Почему добавили без параментов? ст 19
   #handleModelEvent = (updateType, data) => {
     console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
@@ -95,6 +102,9 @@ export default class FilmsBoardPresenter {
       case UpdateType.MINOR:
         break;
       case UpdateType.MAJOR:
+        this.#clearFilmsSection({resetRenderedCardCount: true, resetSortType: true});
+        this.#renderFilmsSection();
+        this.#sortPresenter.init();
         break;
     }
   };
@@ -114,7 +124,6 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilm = (card) => {
-    // ?? Как работает this.#handleViewAction? Здесь 2 аргумента, а в film-presenter 3
     const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent.element, this.#handleViewAction, this.#handleModeChange);
     filmPresenter.init(card);
     // Добавляет свойство с ключом айди карточки и значение экземпляр класс(презентер карточки)
@@ -149,10 +158,9 @@ export default class FilmsBoardPresenter {
     }
   };
 
-  // ?? То же самое, что и {нет ключа, нет ключа} или {resetRenderedCardCount: false, resetSortType: false}, но нужна такая запись, чтобы учесть, что эти ключи могут быть
+  // То же самое, что и {нет ключа, нет ключа}, но нужна такая запись, чтобы учесть, что эти ключи могут быть
   #clearFilmsSection = ({resetRenderedCardCount = false, resetSortType = false} = {}) => {
     // Обходит карту(кол-цию) с презентерами карточек и удаляет карточку и попап с методом destroy, который мы создали в film-presenter, но элементы еще есть, просто пустые
-    // ?? Почему перебор идет значений, а не пар, ведь это мапа, у нее есть еще ключи
     this.#filmPresentersList.forEach((presenter) => presenter.destroy());
     // Очищает мапу, удаляет все элементы, она становится пустая
     this.#filmPresentersList.clear();

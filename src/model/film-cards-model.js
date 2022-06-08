@@ -8,6 +8,7 @@ export default class FilmCardsModel extends Observable {
     return this.#filmsCards;
   }
 
+  // Обновляет карточку в списке и в this.#filmsCards оказывается уже массив с обновленной карточкой, но все еще тот же массив
   updateCard = (updateType, updatedCard) => {
     const index = this.#filmsCards.findIndex((card) => card.id === updatedCard.id);
 
@@ -20,7 +21,7 @@ export default class FilmCardsModel extends Observable {
       updatedCard,
       ...this.#filmsCards.slice(index + 1),
     ];
-
+    // ??
     this._notify(updateType, updatedCard);
   };
 }
