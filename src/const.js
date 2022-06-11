@@ -31,4 +31,9 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {FilterType, SortType, Emotion, UserAction, UpdateType};
+const Extra = {
+  TOP_RATED: 'Top rated',
+  MOST_COMMENTED: 'Most commented',
+};
+
+export {FilterType, SortType, Emotion, UserAction, UpdateType, Extra};

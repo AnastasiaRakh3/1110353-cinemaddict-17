@@ -5,9 +5,13 @@ import FilmsListContainerView from '../view/films-list-container-view.js';
 import LoadMoreButtonView from '../view/loadmore-button-view.js';
 import FilmPresenter from './film-presenter.js';
 import {sortCardUp, sortCardRating} from '../utils/card.js';
-import {SortType, UpdateType} from '../const.js';
+import {SortType, UpdateType, FilterType} from '../const.js';
 import SortPresenter from './sort-presenter.js';
 import { filter } from '../utils/filter.js';
+import NoFilmsListTitleView from '../view/no-films-list-title-view.js';
+import FilmsListTitleView from '../view/films-list-title-view.js';
+import { Extra } from '../const.js';
+import FilmsListExtraPresenter from './films-lists-extra-presenter.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -15,15 +19,20 @@ export default class FilmsBoardPresenter {
   #filmsBlockContainer = null;
   #filmCardsModel = null;
   #filtersModel = null;
+  #noFilmsListTitleComponent = null;
 
   #currentSortType = SortType.DEFAULT;
+  #filterType = FilterType.ALL;
   #filmsBlockComponent = new FilmsBlockView();
   #filmsListComponent = new FilmsListView();
+  #filmsListTitleComponent = new FilmsListTitleView();
   #filmsListContainerComponent = new FilmsListContainerView();
   #loadMoreButtonComponent = new LoadMoreButtonView();
   #renderedCardCount = CARD_COUNT_PER_STEP;
   #filmPresentersList = new Map();
   #sortPresenter = null;
+  #filmsListExtraPresenter = null;
+  #filmsListExtraPresenterList = new Map();
 
   constructor(filmsBlockContainer, filmCardsModel, filtersModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
@@ -36,9 +45,9 @@ export default class FilmsBoardPresenter {
 
   // Геттер, возвращающий массив карточек в нужном порядке, в зависимости какая сортировка включена
   get filmCards() {
-    const filterType = this.#filtersModel.filter;
+    this.#filterType = this.#filtersModel.filter;
     const cards = this.#filmCardsModel.filmCards;
-    const filteredCards = filter[filterType](cards);
+    const filteredCards = filter[this.#filterType](cards);
 
     switch (this.#currentSortType) {
       case SortType.DATE_UP:
@@ -51,10 +60,6 @@ export default class FilmsBoardPresenter {
 
   init = () => {
     this.#renderFilmsBoard();
-
-    // if (this.#filmCards.length === 0) {
-    //   this.#renderNoCards();
-    // }
   };
 
   // Метод, который мы вызываем при нажатии кнопки Загрузить еще
@@ -135,9 +140,9 @@ export default class FilmsBoardPresenter {
   };
 
   #renderNoCards = () => {
-    const filmsTitle = this.#filmsListComponent.element.querySelector('.films-list__title');
-    filmsTitle.classList.remove('visually-hidden');
-    filmsTitle.textContent = 'There are no movies in our database';
+    this.#noFilmsListTitleComponent = new NoFilmsListTitleView(this.#filterType);
+    remove(this.#filmsListTitleComponent);
+    render(this.#noFilmsListTitleComponent, this.#filmsListTitleComponent.element, RenderPosition.AFTERBEGIN);
   };
 
   #renderLoadMoreButton = () => {
@@ -156,6 +161,18 @@ export default class FilmsBoardPresenter {
     if (cardsToRender.length < cardCount) {
       this.#renderLoadMoreButton();
     }
+
+    if (cardCount === 0) {
+      this.#renderNoCards();
+      return;
+    }
+
+    render(this.#filmsListTitleComponent, this.#filmsListComponent.element, RenderPosition.AFTERBEGIN);
+  };
+
+  #renderExtraSection = () => {
+    [Extra.TOP_RATED, Extra.MOST_COMMENTED].forEach((extraMode) => this.#filmsListExtraPresenterList.set(extraMode, new FilmsListExtraPresenter(this.#filmsListComponent.element, extraMode, this.#filmCardsModel)));
+    this.#filmsListExtraPresenterList.forEach((presenter) => presenter.init());
   };
 
   // То же самое, что и {нет ключа, нет ключа}, но нужна такая запись, чтобы учесть, что эти ключи могут быть
@@ -176,6 +193,10 @@ export default class FilmsBoardPresenter {
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
     }
+
+    if (this.#noFilmsListTitleComponent) {
+      remove(this.#noFilmsListTitleComponent);
+    }
   };
 
   #renderFilmsBoard = () => {
@@ -187,5 +208,7 @@ export default class FilmsBoardPresenter {
     // Создаем презентер вьюхи сортировки, куда отрендерить и что делать при клике
     this.#sortPresenter = new SortPresenter(this.#filmsBlockComponent.element, this.#handleSortTypeChange);
     this.#sortPresenter.init(this.#currentSortType);
+
+    // this.#renderExtraSection();
   };
 }

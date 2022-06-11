@@ -1,5 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { Emotion } from '../const.js';
+import he from 'he';
 
 // Чтобы гарантировать порядок эмоджи
 const EmojiOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY];
@@ -18,7 +19,7 @@ const createPopupNewCommentTemplate = (state) => {
   <div class="film-details__add-emoji-label">${getSelectedEmojiPicture()}</div>
 
   <label class="film-details__comment-label">
-    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${state.localComment}</textarea>
+    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(state.localComment)}</textarea>
   </label>
   <div class="film-details__emoji-list">
   ${EmojiOrder.map((emoji) => createListElement(emoji)).join('')}
