@@ -1,6 +1,5 @@
 import {nanoid} from 'nanoid';
 import {getRandomInteger} from '../utils/common.js';
-import {commentIdCounter} from './comment.js';
 
 const AGE_RATING = [0, 8, 16, 21];
 const DIRECTORS = ['Стивен Аллан Спилберг', 'Мартин Чарльз Скорсезе', 'Альфред Джозеф Хичкок', 'Стэнли Кубрик'];
@@ -53,7 +52,7 @@ const generateFilmReleaseDate = () => {
   return filmDates[randomIndex];
 };
 
-const getCommentsIdArray = () => Array.from({length: commentIdCounter}, () => getRandomInteger(1, commentIdCounter));
+const getCommentsIdArray = () => Array.from({length: 6}, () => getRandomInteger(1, 10));
 
 export const generateFilmCard = () => ({
   id:  nanoid(),

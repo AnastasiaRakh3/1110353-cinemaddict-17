@@ -51,7 +51,7 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   #commentSendHandler = (evt) => {
     if (evt.keyCode === 13 && evt.ctrlKey) {
-      // console.log(this._state);
+      this._callback.commentAddKeyDown(PopupNewCommentView.parseStateToComment(this._state));
     }
   };
 
@@ -96,5 +96,9 @@ export default class PopupNewCommentView extends AbstractStatefulView {
     delete commentData.localComment;
     delete commentData.localEmotion;
     return commentData;
+  };
+
+  setAddCommentKeyDownHandler = (callback) => {
+    this._callback.commentAddKeyDown = callback;
   };
 }

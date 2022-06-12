@@ -1,3 +1,10 @@
+const UserStatus = {
+  NO_STATUS: '',
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  MOVIE_BUFF: 'Movie Buff',
+};
+
 const FilterType = {
   ALL: 'all',
   WATCHLIST: 'watchlist',
@@ -36,4 +43,4 @@ const Extra = {
   MOST_COMMENTED: 'Most commented',
 };
 
-export {FilterType, SortType, Emotion, UserAction, UpdateType, Extra};
+export {UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType, Extra};

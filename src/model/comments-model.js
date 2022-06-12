@@ -2,7 +2,12 @@ import Observable from '../framework/observable.js';
 import {generateComment} from '../mock/comment.js';
 
 export default class CommentsModel extends Observable {
-  #comments = Array.from({length: 5}, generateComment);
+  #comments = {};
+
+  constructor(commentsCount) {
+    super();
+    this.#comments = Array.from({length: commentsCount}, generateComment);
+  }
 
   get comments() {
     return this.#comments;
@@ -17,8 +22,8 @@ export default class CommentsModel extends Observable {
     this._notify(updateType, updatedComment);
   };
 
-  deleteComment = (updateType, updatedComment) => {
-    const index = this.#comments.findIndex((comment) => comment.id === updatedComment.id);
+  deleteComment = (updateType, updatedCommentId) => {
+    const index = this.#comments.findIndex((comment) => comment.id === updatedCommentId);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting comment');

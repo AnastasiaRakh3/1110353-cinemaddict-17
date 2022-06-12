@@ -1,8 +1,5 @@
 import {getRandomInteger} from '../utils/common.js';
-
-let commentIdCounter = 1;
-
-const generateCommentId = () => commentIdCounter++;
+import {nanoid} from 'nanoid';
 
 const generateAuthor = () => {
   const authors = [
@@ -40,11 +37,11 @@ const generateDate = () => {
 const EMOJIES = ['smile', 'sleeping', 'puke', 'angry'];
 
 const generateComment = () => ({
-  id: generateCommentId(),
+  id: nanoid(),
   author: generateAuthor(),
   comment: generateText(),
   date: generateDate(),
   emotion: EMOJIES[getRandomInteger(0, EMOJIES.length-1)],
 });
 
-export {commentIdCounter, generateComment};
+export {generateComment};

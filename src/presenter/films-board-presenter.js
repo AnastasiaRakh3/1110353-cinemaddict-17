@@ -103,6 +103,10 @@ export default class FilmsBoardPresenter {
         // - обновить карточку (например, когда добавили класс Favorites)
         // В списке презенторов находим нужный перезентер карточки по ключю айди карточки и запускаем его, он отрисует карточку
         this.#filmPresentersList.get(data.id).init(data);
+        if (this.#filterType !== FilterType.ALL) {
+          this.#clearFilmsSection();
+          this.#renderFilmsSection();
+        }
         break;
       case UpdateType.MINOR:
         break;
@@ -142,7 +146,7 @@ export default class FilmsBoardPresenter {
   #renderNoCards = () => {
     this.#noFilmsListTitleComponent = new NoFilmsListTitleView(this.#filterType);
     remove(this.#filmsListTitleComponent);
-    render(this.#noFilmsListTitleComponent, this.#filmsListTitleComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#noFilmsListTitleComponent, this.#filmsListComponent.element, RenderPosition.AFTERBEGIN);
   };
 
   #renderLoadMoreButton = () => {
