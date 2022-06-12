@@ -8,7 +8,7 @@ const createFilmCardTemplate = (filmCard) => {
   const inFavoriteClassName = favorite ? 'film-card__controls-item--active' : '';
   const releaseFilmDate = humanizeFilmDate(date);
   const checkFilmRunTime = (time) => {
-    if(time.includes('0h ')) {
+    if(time.includes('0h')) {
       return time.substr(3);
     }
     return time;

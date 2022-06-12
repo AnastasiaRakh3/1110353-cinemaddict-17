@@ -7,7 +7,6 @@ const EmojiOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY
 
 const createPopupNewCommentTemplate = (state) => {
   const getSelectedEmojiPicture = () => state.localEmotion !== null ? `<img src="images/emoji/${state.localEmotion}.png" width="55" height="55" alt="emoji-${state.localEmotion}">` : '';
-
   const checkIsEmojiSelected = (emoji) => emoji === state.localEmotion ? 'checked' : '';
 
   const createListElement = (emoji) =>  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)}>
@@ -91,6 +90,8 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
     if (!commentData.localEmotion) {
       commentData.emotion = Emotion.SMILE;
+    } else {
+      commentData.emotion = commentData.localEmotion;
     }
 
     delete commentData.localComment;

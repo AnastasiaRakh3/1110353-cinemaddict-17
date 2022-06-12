@@ -61,6 +61,7 @@ export default class FilmPresenter {
     // Если в режиме просмотра, то попап снова перерисовыватся
     if (this.#mode === Mode.WATCHING) {
       replace(this.#popupComponent, prevPopupComponent);
+      this.#commentsPresenter.init();
     }
 
     replace(this.#cardComponent, prevCardComponent);
