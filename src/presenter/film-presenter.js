@@ -3,6 +3,7 @@ import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -39,7 +40,7 @@ export default class FilmPresenter {
     this.#cardComponent = new FilmCardView(card);
     this.#popupComponent = new PopupView(card);
 
-    this.#commentsPresenter = new CommentsPresenter(new CommentsModel(), this.#popupComponent.element.querySelector('.film-details__top-container'));
+    this.#commentsPresenter = new CommentsPresenter(new CommentsModel(this.#card.comments.length), this.#popupComponent.element.querySelector('.film-details__top-container'));
 
     this.#cardComponent.setClickHandler(this.#handleCardClick);
     this.#cardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
@@ -60,6 +61,7 @@ export default class FilmPresenter {
     // Если в режиме просмотра, то попап снова перерисовыватся
     if (this.#mode === Mode.WATCHING) {
       replace(this.#popupComponent, prevPopupComponent);
+      this.#commentsPresenter.init();
     }
 
     replace(this.#cardComponent, prevCardComponent);
@@ -73,6 +75,7 @@ export default class FilmPresenter {
     remove(this.#popupComponent);
   };
 
+  // Метод закрывает открытый попап
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#closePopup();
@@ -80,6 +83,7 @@ export default class FilmPresenter {
   };
 
   #openPopup = () => {
+    // ?? Где этот метод?
     this.#changeMode();
     this.#bodyComponent.appendChild(this.#popupComponent.element);
     bodyElement.classList.add('hide-overflow');
@@ -104,28 +108,34 @@ export default class FilmPresenter {
   };
 
   #handleWatchlistClick = () => {
-    this.#changeData({...this.#card,
-      userDetails: {
-        ...this.#card.userDetails,
-        watchlist: !this.#card.userDetails.watchlist,}
-    });
+    this.#changeData(UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      {...this.#card,
+        userDetails: {
+          ...this.#card.userDetails,
+          watchlist: !this.#card.userDetails.watchlist,}
+      });
   };
 
   #handleAlreadyWatchedClick = () => {
-    this.#changeData({...this.#card,
-      userDetails: {
-        ...this.#card.userDetails,
-        alreadyWatched: !this.#card.userDetails.alreadyWatched,}
-    });
+    this.#changeData(UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      {...this.#card,
+        userDetails: {
+          ...this.#card.userDetails,
+          alreadyWatched: !this.#card.userDetails.alreadyWatched,}
+      });
   };
 
   //  Вызывает метод обновления данных с правильно измененным полем favorite (обновленная карточка)
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#card,
-      userDetails: {
-        ...this.#card.userDetails,
-        favorite: !this.#card.userDetails.favorite,}
-    });
+    this.#changeData(UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      {...this.#card,
+        userDetails: {
+          ...this.#card.userDetails,
+          favorite: !this.#card.userDetails.favorite,}
+      });
   };
 
   #handleCardClick = () => {

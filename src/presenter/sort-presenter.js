@@ -7,6 +7,7 @@ export default class SortPresenter {
 
   #renderingPlace = null;
 
+  // ??
   #currentSortType = SortType.DEFAULT;
   #sortComponent = null;
   #changeData = null;

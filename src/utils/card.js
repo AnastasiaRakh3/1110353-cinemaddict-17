@@ -33,4 +33,6 @@ const sortCardUp = (cardA, cardB) => {
 
 const sortCardRating = (cardA, cardB) => cardA.filmInfo.totalRating - cardB.filmInfo.totalRating;
 
-export {humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, sortCardUp, sortCardRating, showFilmRunTime};
+const sortCardMostCommented = (cardA, cardB) => cardA.comments.length - cardB.comments.length;
+
+export {humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, sortCardUp, sortCardRating, showFilmRunTime, sortCardMostCommented};
