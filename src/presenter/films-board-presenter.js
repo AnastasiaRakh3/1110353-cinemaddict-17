@@ -12,6 +12,7 @@ import NoFilmsListTitleView from '../view/no-films-list-title-view.js';
 import FilmsListTitleView from '../view/films-list-title-view.js';
 import { Extra } from '../const.js';
 import FilmsListExtraPresenter from './films-lists-extra-presenter.js';
+import LoadingView from '../view/loading-view.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -28,11 +29,13 @@ export default class FilmsBoardPresenter {
   #filmsListTitleComponent = new FilmsListTitleView();
   #filmsListContainerComponent = new FilmsListContainerView();
   #loadMoreButtonComponent = new LoadMoreButtonView();
+  #loadingComponent = new LoadingView();
   #renderedCardCount = CARD_COUNT_PER_STEP;
   #filmPresentersList = new Map();
   #sortPresenter = null;
   #filmsListExtraPresenter = null;
   #filmsListExtraPresenterList = new Map();
+  #isLoading = true;
 
   constructor(filmsBlockContainer, filmCardsModel, filtersModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
@@ -115,6 +118,11 @@ export default class FilmsBoardPresenter {
         this.#renderFilmsSection();
         this.#sortPresenter.init();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderFilmsSection();
+        break;
     }
   };
 
@@ -143,6 +151,10 @@ export default class FilmsBoardPresenter {
     cards.forEach((card) => this.#renderFilm(card));
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#filmsListComponent.element, RenderPosition.AFTERBEGIN);
+  };
+
   #renderNoCards = () => {
     this.#noFilmsListTitleComponent = new NoFilmsListTitleView(this.#filterType);
     remove(this.#filmsListTitleComponent);
@@ -156,6 +168,11 @@ export default class FilmsBoardPresenter {
 
   // Рендерит нужные фильмы и кнопку Загрузить еще
   #renderFilmsSection = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const cardCount = this.filmCards.length;
     const cardsToRender = this.filmCards.slice(0, this.#renderedCardCount);
 
@@ -187,6 +204,7 @@ export default class FilmsBoardPresenter {
     this.#filmPresentersList.clear();
 
     remove(this.#loadMoreButtonComponent);
+    remove(this.#loadingComponent);
 
     // Если нужно сбросить ко-во карточек и опять 5
     if(resetRenderedCardCount) {
