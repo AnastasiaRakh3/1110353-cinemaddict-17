@@ -8,6 +8,17 @@ const humanizeFilmDate = (dueDate) => dayjs(dueDate).format('YYYY');
 const humanizePopupFilmDate = (dueDate) => dayjs(dueDate).format('DD MMMM YYYY');
 const humanizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/DD HH:mm');
 
+const checkFilmRunTime = (time) => {
+  if(time.includes('0h')) {
+    return time.substr(3);
+  }
+  return time;
+};
+
+const checkTotalRating = (rating) => rating.toFixed(1);
+
+const checkDescriptionLength = (string) => `${string.slice(1, 139)}...`;
+
 // Функция помещает карты без даты в конце списка,
 // возвращая нужный вес для колбэка sort
 const getWeightForNullDate = (dateA, dateB) => {
@@ -35,4 +46,4 @@ const sortCardRating = (cardA, cardB) => cardA.filmInfo.totalRating - cardB.film
 
 const sortCardMostCommented = (cardA, cardB) => cardA.comments.length - cardB.comments.length;
 
-export {humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, sortCardUp, sortCardRating, showFilmRunTime, sortCardMostCommented};
+export {humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, checkFilmRunTime, checkTotalRating, checkDescriptionLength, sortCardUp, sortCardRating, showFilmRunTime, sortCardMostCommented};

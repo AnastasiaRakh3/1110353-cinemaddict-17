@@ -8,6 +8,10 @@ export default class FilmCardsModel extends Observable {
   constructor(cardsApiService) {
     super();
     this.#cardsApiService = cardsApiService;
+
+    this.#cardsApiService.cards.then((cards) => {
+      console.log(cards.map(this.#adaptToClient));
+    });
   }
 
   get filmCards() {

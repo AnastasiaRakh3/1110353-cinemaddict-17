@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizePopupFilmDate} from '../utils/card.js';
+import {humanizePopupFilmDate, showFilmRunTime, checkFilmRunTime, checkTotalRating} from '../utils/card.js';
 
 const createPopupTemplate = (filmCard) => {
   const {filmInfo: {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release: {date, releaseCountry}, runtime, genre, description}, userDetails: {watchlist, alreadyWatched, favorite}} = filmCard;
@@ -7,7 +7,6 @@ const createPopupTemplate = (filmCard) => {
   const inWatchListClassName = watchlist ? 'film-details__control-button--active' : '';
   const inAlreadyWatchedClassName = alreadyWatched ? 'film-details__control-button--active' : '';
   const inFavoriteClassName = favorite ? 'film-details__control-button--active' : '';
-  const releaseFilmDate = humanizePopupFilmDate(date);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -30,7 +29,7 @@ const createPopupTemplate = (filmCard) => {
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${totalRating}</p>
+              <p class="film-details__total-rating">${checkTotalRating(totalRating)}</p>
             </div>
           </div>
 
@@ -41,19 +40,19 @@ const createPopupTemplate = (filmCard) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">${writers}</td>
+              <td class="film-details__cell">${writers.join(', ')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">${actors}</td>
+              <td class="film-details__cell">${actors.join(', ')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${releaseFilmDate}</td>
+              <td class="film-details__cell">${humanizePopupFilmDate(date)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${runtime}</td>
+              <td class="film-details__cell">${checkFilmRunTime(showFilmRunTime(runtime))}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
@@ -62,9 +61,8 @@ const createPopupTemplate = (filmCard) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${genre}</span>
-                <span class="film-details__genre">${genre}</span>
-                <span class="film-details__genre">${genre}</span></td>
+                <span class="film-details__genre">${genre.join(' ')}</span>
+              </td>
             </tr>
           </table>
 
