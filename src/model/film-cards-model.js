@@ -3,47 +3,54 @@ import { UpdateType } from '../const.js';
 
 export default class FilmCardsModel extends Observable {
   #cardsApiService = null;
-  #filmsCards = [];
+  #filmCards = [];
 
   constructor(cardsApiService) {
     super();
     this.#cardsApiService = cardsApiService;
 
-    this.#cardsApiService.cards.then((cards) => {
-      console.log(cards.map(this.#adaptToClient));
-    });
+    // this.#cardsApiService.cards.then((cards) => {
+    //   console.log(cards.map(this.#adaptToClient));
+    // });
   }
 
   get filmCards() {
-    return this.#filmsCards;
+    return this.#filmCards;
   }
 
-  init = async () => {
+  init = async () => { // async опеределяет асин.функцию, результатом будет новый промис
     try {
-      const cards = await this.#cardsApiService.cards;
-      this. #filmsCards = cards.map(this.#adaptToClient);
+      const cards = await this.#cardsApiService.cards; // await дожидается окончание выполнение запроса
+      this. #filmCards = cards.map(this.#adaptToClient);
     } catch(err) {
-      this.#filmsCards = [];
+      this.#filmCards = [];
     }
+
     this._notify(UpdateType.INIT);
   };
 
 
   // Обновляет карточку в списке и в this.#filmsCards оказывается уже массив с обновленной карточкой, но все еще тот же массив
-  updateCard = (updateType, updatedCard) => {
-    const index = this.#filmsCards.findIndex((card) => card.id === updatedCard.id);
+  // Добавили сюда try и catch, значит async нужен, так как асинх.операция
+  updateCard = async (updateType, update) => {
+    const index = this.#filmCards.findIndex((card) => card.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting card');
     }
 
-    this.#filmsCards = [
-      ...this.#filmsCards.slice(0, index),
-      updatedCard,
-      ...this.#filmsCards.slice(index + 1),
-    ];
-    // ??
-    this._notify(updateType, updatedCard);
+    try {
+      const response = await this.#cardsApiService.updateCard(update);
+      const updatedCard = this.#adaptToClient(response);
+      this.#filmCards = [
+        ...this.#filmCards.slice(0, index),
+        updatedCard,
+        ...this.#filmCards.slice(index + 1),
+      ];
+      this._notify(updateType, updatedCard);
+    } catch(err) {
+      throw new Error('Can\'t update card');
+    }
   };
 
   #adaptToClient = (card) => {
@@ -56,8 +63,8 @@ export default class FilmCardsModel extends Observable {
         totalRating: card['film_info']['total_rating'],
       },
       userDetails: {...card['user_details'],
-        alreadyWatched: {...card['user_details']['already_watched']},
-        watchingDate: {...card['user_details']['watching_date']},
+        alreadyWatched: card['user_details']['already_watched'],
+        watchingDate: card['user_details']['watching_date'],
       }
     };
 

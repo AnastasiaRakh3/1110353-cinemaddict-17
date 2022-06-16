@@ -5,22 +5,22 @@ import { filter } from '../utils/filter';
 
 export default class FiltersPresenter {
   #renderingPlace = null;
-  #filmCardsModel = null;
+  #cardsModel = null;
   #filtersModel = null;
 
   #filtersComponent = null;
 
-  constructor (renderingPlace, filmCardsModel, filtersModel) {
-    this.#filmCardsModel = filmCardsModel;
+  constructor (renderingPlace, cardsModel, filtersModel) {
+    this.#cardsModel = cardsModel;
     this.#renderingPlace = renderingPlace;
     this.#filtersModel = filtersModel;
 
-    this.#filmCardsModel.addObserver(this.#handleModelEvent);
+    this.#cardsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   get filters () {
-    const filmCards = this.#filmCardsModel.filmCards;
+    const filmCards = this.#cardsModel.filmCards;
 
     return [
       {

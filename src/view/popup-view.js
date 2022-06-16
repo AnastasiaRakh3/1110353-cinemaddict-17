@@ -61,7 +61,7 @@ const createPopupTemplate = (filmCard) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${genre.join(' ')}</span>
+                <span class="film-details__genre">${genre.join('&emsp;')}</span>
               </td>
             </tr>
           </table>

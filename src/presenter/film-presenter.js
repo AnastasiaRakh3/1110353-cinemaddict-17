@@ -4,6 +4,7 @@ import PopupView from '../view/popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
 import {UserAction, UpdateType} from '../const.js';
+import { getTodayDate } from '../utils/card.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -123,7 +124,9 @@ export default class FilmPresenter {
       {...this.#card,
         userDetails: {
           ...this.#card.userDetails,
-          alreadyWatched: !this.#card.userDetails.alreadyWatched,}
+          alreadyWatched: !this.#card.userDetails.alreadyWatched,
+          watchingDate: !this.#card.userDetails.alreadyWatched? getTodayDate(): null,
+        }
       });
   };
 

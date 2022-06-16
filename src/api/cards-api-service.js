@@ -7,18 +7,22 @@ const Method = {
 
 export default class CardsApiService extends ApiService {
   get cards() {
-    return this._load({url: 'movies'})
-      .then(ApiService.parseResponse);
+    // По умолчанию GET запрос
+    return this._load({url: 'movies'}) //отправка запроса к серверу, где пока только адрес относит-но сервера
+      .then(ApiService.parseResponse); //стат.метод parseResponse вызывается только у самого класса, обработки ответа (превращает в json формат)
   }
 
-  updateCard = async (card) => {
-    const response = await this._load({
+  // Для PUT запроса
+  updateCard = async (card) => { // async опеределяет асин.функцию, результатом будет новый промис
+    // Отправляет запрос
+    const response = await this._load({ // await дожидается окончание выполнение запроса
       url: `movies/${card.id}`,
       method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer(card)),
-      headers: new Headers({'Content-Type': 'application/json'}),
+      body: JSON.stringify(this.#adaptToServer(card)), // JSON.stringify преобразует карточку в строку JSON
+      headers: new Headers({'Content-Type': 'application/json'}), //Определяет тип содерж-го
     });
 
+    // Принял ответ после отправки, переделал в json формат
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;

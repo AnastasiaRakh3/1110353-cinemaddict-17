@@ -18,7 +18,7 @@ const CARD_COUNT_PER_STEP = 5;
 
 export default class FilmsBoardPresenter {
   #filmsBlockContainer = null;
-  #filmCardsModel = null;
+  #cardsModel = null;
   #filtersModel = null;
   #noFilmsListTitleComponent = null;
 
@@ -37,19 +37,19 @@ export default class FilmsBoardPresenter {
   #filmsListExtraPresenterList = new Map();
   #isLoading = true;
 
-  constructor(filmsBlockContainer, filmCardsModel, filtersModel) {
+  constructor(filmsBlockContainer, cardsModel, filtersModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
-    this.#filmCardsModel = filmCardsModel;
+    this.#cardsModel = cardsModel;
     this.#filtersModel = filtersModel;
 
-    this.#filmCardsModel.addObserver(this.#handleModelEvent);
+    this.#cardsModel.addObserver(this.#handleModelEvent);
     this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
   // Геттер, возвращающий массив карточек в нужном порядке, в зависимости какая сортировка включена
   get filmCards() {
     this.#filterType = this.#filtersModel.filter;
-    const cards = this.#filmCardsModel.filmCards;
+    const cards = this.#cardsModel.filmCards;
     const filteredCards = filter[this.#filterType](cards);
 
     switch (this.#currentSortType) {
@@ -94,7 +94,7 @@ export default class FilmsBoardPresenter {
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
-    this.#filmCardsModel.updateCard(updateType, update);
+    this.#cardsModel.updateCard(updateType, update);
   };
 
   // Метод, который добавим в наблюдатель
@@ -170,6 +170,7 @@ export default class FilmsBoardPresenter {
   #renderFilmsSection = () => {
     if (this.#isLoading) {
       this.#renderLoading();
+
       return;
     }
 
@@ -192,7 +193,7 @@ export default class FilmsBoardPresenter {
   };
 
   #renderExtraSection = () => {
-    [Extra.TOP_RATED, Extra.MOST_COMMENTED].forEach((extraMode) => this.#filmsListExtraPresenterList.set(extraMode, new FilmsListExtraPresenter(this.#filmsListComponent.element, extraMode, this.#filmCardsModel)));
+    [Extra.TOP_RATED, Extra.MOST_COMMENTED].forEach((extraMode) => this.#filmsListExtraPresenterList.set(extraMode, new FilmsListExtraPresenter(this.#filmsListComponent.element, extraMode, this.#cardsModel)));
     this.#filmsListExtraPresenterList.forEach((presenter) => presenter.init());
   };
 

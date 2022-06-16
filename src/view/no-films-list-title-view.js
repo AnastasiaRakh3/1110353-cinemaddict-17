@@ -11,7 +11,7 @@ const NoFilmsListTextType = {
 const createNoFilmsListTitleTemplate = (filterType) => {
   const noFilmsListTextValue = NoFilmsListTextType[filterType];
 
-  return `<h2 class="films-list__title"> ${noFilmsListTextValue}</h2>`;
+  return `<h2 class="films-list__title">${noFilmsListTextValue}</h2>`;
 };
 
 export default class NoFilmsListTitleView extends AbstractView {
