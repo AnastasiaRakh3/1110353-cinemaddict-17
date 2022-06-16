@@ -1,9 +1,5 @@
 import ApiService from '../framework/api-service';
-
-// const Method = {
-//   GET: 'GET',
-//   PUT: 'PUT',
-// };
+import { Method } from '../server-config';
 
 export default class CommentsApiService extends ApiService {
   #cardId = null;
@@ -19,14 +15,19 @@ export default class CommentsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-  // updateTask = async (task) => {
-  //   const response = await this._load({
-  //     url: `tasks/${task.id}`,
-  //     method: Method.PUT,
-  //     body: JSON.stringify(task),
-  //     headers: new Headers({'Content-Type': 'application/json'}),
-  //   });
-  //   const parsedResponse = await ApiService.parseResponse(response);
-  //   return parsedResponse;
-  // };
+  // Для PUT запроса
+  addComment = async (comment) => { // async опеределяет асин.функцию, результатом будет новый промис
+    // Отправляет запрос
+    const response = await this._load({ // await дожидается окончание выполнение запроса
+      url: `comments/${this.#cardId}`,
+      method: Method.PUT,
+      body: JSON.stringify(comment), // JSON.stringify преобразует карточку в строку JSON
+      headers: new Headers({'Content-Type': 'application/json'}), //Определяет тип содерж-го
+    });
+
+    // Принял ответ после отправки, переделал в json формат
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  };
 }

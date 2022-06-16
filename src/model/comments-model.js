@@ -28,13 +28,20 @@ export default class CommentsModel extends Observable {
     this._notify(UpdateType.MAJOR);
   };
 
-  addComment = (updateType, updatedComment) => {
-    this.#comments = [
-      updatedComment,
-      ...this.#comments,
-    ];
+  addComment = async (updateType, update) => {
 
-    this._notify(updateType, updatedComment);
+    try {
+      const addedComment = await this.#commentsApiService.addComment(update);
+      console.log(addedComment);
+      this.#comments = [
+        ...this.#comments,
+        addedComment,
+      ];
+
+      this._notify(updateType, addedComment);
+    } catch(err) {
+      throw new Error('Can\'t add comment');
+    }
   };
 
   deleteComment = (updateType, updatedCommentId) => {

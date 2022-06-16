@@ -6,9 +6,7 @@ import UserModel from './model/user-model.js';
 import UserPresenter from './presenter/user-presenter.js';
 import CardsApiService from './api/cards-api-service.js';
 import FooterPresenter from './presenter/footer-presenter.js';
-
-const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
-const AUTHORIZATION = 'Basic hS2sfS445555552j';
+import { END_POINT, AUTHORIZATION } from './server-config.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');

@@ -6,9 +6,7 @@ import CommentsPresenter from './comments-presenter.js';
 import {UserAction, UpdateType} from '../const.js';
 import { getTodayDate } from '../utils/card.js';
 import CommentsApiService from '../api/comments-api-service.js';
-
-const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
-const AUTHORIZATION = 'Basic hS2sfS445555552j';
+import { END_POINT, AUTHORIZATION } from '../server-config.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
