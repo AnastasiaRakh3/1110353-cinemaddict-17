@@ -7,8 +7,8 @@ import UserPresenter from './presenter/user-presenter.js';
 import CardsApiService from './api/cards-api-service.js';
 import FooterPresenter from './presenter/footer-presenter.js';
 
-const AUTHORIZATION = 'Basic hS2sfS445555552j';
 const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
+const AUTHORIZATION = 'Basic hS2sfS445555552j';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -16,7 +16,7 @@ const siteMainElement = document.querySelector('.main');
 const filmCardsModel = new FilmCardsModel(new CardsApiService(END_POINT, AUTHORIZATION));
 const filtersModel = new FiltersModel();
 const userModel = new UserModel();
-const filmsPresenter = new FilmsBoardPresenter(siteMainElement, filmCardsModel, filtersModel);
+const filmsBoardPresenter = new FilmsBoardPresenter(siteMainElement, filmCardsModel, filtersModel);
 const filtersPresenter = new FiltersPresenter(siteMainElement, filmCardsModel, filtersModel);
 const userPresenter = new UserPresenter(siteHeaderElement, filmCardsModel, userModel);
 const footerPresenter = new FooterPresenter(filmCardsModel);
@@ -24,8 +24,7 @@ const footerPresenter = new FooterPresenter(filmCardsModel);
 userPresenter.init();
 filtersPresenter.init();
 footerPresenter.init();
-
-filmsPresenter.init();
+filmsBoardPresenter.init();
 //почему в демо в конце? ведь получаем карточки которые нужны для отрисовки
 filmCardsModel.init();
 // filmCardsModel.init()

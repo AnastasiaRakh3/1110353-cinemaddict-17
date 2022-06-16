@@ -1,27 +1,16 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createFooterStatisticsTemplate = (cards) => {
-  const MOVIES_DATABASE_COUNT = '130 291';
-  const checkMoviesCount = () => {
-    if (cards.length) {
-      return MOVIES_DATABASE_COUNT;
-    }
-    return cards.length;
-  };
-  return `<p>${checkMoviesCount()} movies inside</p>`;
-
-};
+const createFooterStatisticsTemplate = (cardsCount) => `<p>${cardsCount} movies inside</p>`;
 
 export default class FooterStatisticsView extends AbstractView {
-  #cardsModel = null;
+  #cardsCount = null;
 
-  constructor(cardsModel) {
+  constructor(cardsCount) {
     super();
-    this.#cardsModel = cardsModel;
-    console.log(this.#cardsModel);
+    this.#cardsCount = cardsCount;
   }
 
   get template() {
-    return createFooterStatisticsTemplate(this.#cardsModel);
+    return createFooterStatisticsTemplate(this.#cardsCount);
   }
 }

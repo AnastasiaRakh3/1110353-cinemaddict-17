@@ -21,7 +21,7 @@ export default class FilmCardsModel extends Observable {
   init = async () => { // async опеределяет асин.функцию, результатом будет новый промис
     try {
       const cards = await this.#cardsApiService.cards; // await дожидается окончание выполнение запроса
-      this. #filmCards = cards.map(this.#adaptToClient);
+      this.#filmCards = cards.map(this.#adaptToClient);
     } catch(err) {
       this.#filmCards = [];
     }

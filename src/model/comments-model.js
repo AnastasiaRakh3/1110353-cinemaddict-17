@@ -1,17 +1,32 @@
 import Observable from '../framework/observable.js';
-import {generateComment} from '../mock/comment.js';
+import { UpdateType } from '../const.js';
 
 export default class CommentsModel extends Observable {
-  #comments = {};
+  #commentsApiService = null;
+  #comments = [];
 
-  constructor(commentsCount) {
+  constructor(commentsApiService) {
     super();
-    this.#comments = Array.from({length: commentsCount}, generateComment);
+    this.#commentsApiService = commentsApiService;
+
+    // this.#commentsApiService.comments.then((comments) => {
+    //   console.log('наши комменты с сервера', comments);
+    // });
   }
 
-  get comments() {
+  get filmComments() {
     return this.#comments;
   }
+
+  init = async () => { // async опеределяет асин.функцию, результатом будет новый промис
+    try {
+      this.#comments = await this.#commentsApiService.comments; // await дожидается окончание выполнение запроса
+    } catch(err) {
+      this.#comments = [];
+    }
+
+    this._notify(UpdateType.MAJOR);
+  };
 
   addComment = (updateType, updatedComment) => {
     this.#comments = [

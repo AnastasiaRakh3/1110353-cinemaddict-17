@@ -20,7 +20,7 @@ export default class CommentsPresenter {
   }
 
   get commentsList() {
-    return [...this.#commentsModel.comments];
+    return [...this.#commentsModel.filmComments];
   }
 
   #handleViewAction = (actionType, updateType, update) => {

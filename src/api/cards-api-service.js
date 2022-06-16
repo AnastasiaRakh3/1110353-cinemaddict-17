@@ -6,6 +6,7 @@ const Method = {
 };
 
 export default class CardsApiService extends ApiService {
+
   get cards() {
     // По умолчанию GET запрос
     return this._load({url: 'movies'}) //отправка запроса к серверу, где пока только адрес относит-но сервера

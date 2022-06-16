@@ -5,6 +5,10 @@ import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
 import {UserAction, UpdateType} from '../const.js';
 import { getTodayDate } from '../utils/card.js';
+import CommentsApiService from '../api/comments-api-service.js';
+
+const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
+const AUTHORIZATION = 'Basic hS2sfS445555552j';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -20,10 +24,11 @@ export default class FilmPresenter {
 
   #card = null;
   #mode = Mode.DEFAULT;
-
   #cardComponent = null;
   #popupComponent = null;
   #commentsPresenter = null;
+  #commentsModel = null;
+  #cardsModel = null;
   #bodyComponent = bodyElement;
 
   constructor(filmListContainer, changeData, changeMode) {
@@ -41,17 +46,11 @@ export default class FilmPresenter {
     this.#cardComponent = new FilmCardView(card);
     this.#popupComponent = new PopupView(card);
 
-    this.#commentsPresenter = new CommentsPresenter(new CommentsModel(this.#card.comments.length), this.#popupComponent.element.querySelector('.film-details__top-container'));
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION, this.#card.id));
+    this.#commentsModel.init();
+    this.#commentsPresenter = new CommentsPresenter(this.#commentsModel, this.#popupComponent.element.querySelector('.film-details__top-container'));
 
-    this.#cardComponent.setClickHandler(this.#handleCardClick);
-    this.#cardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    this.#cardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
-    this.#cardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-
-    this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
-    this.#popupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    this.#popupComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
-    this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#setAllHandlers();
 
     // Проверка на первую отрисовку
     if (prevCardComponent === null || prevPopupComponent === null) {
@@ -147,5 +146,17 @@ export default class FilmPresenter {
 
   #handlePopupCloseClick = () => {
     this.#closePopup();
+  };
+
+  #setAllHandlers = () => {
+    this.#cardComponent.setClickHandler(this.#handleCardClick);
+    this.#cardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#cardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#cardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+
+    this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
+    this.#popupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#popupComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
   };
 }

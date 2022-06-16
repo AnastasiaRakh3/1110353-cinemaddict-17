@@ -11,13 +11,12 @@ export default class FooterPresenter {
   }
 
   get cards () {
-    console.log(this.#cardsModel.filmCards);
     return this.#cardsModel.filmCards;
   }
 
   init = () => {
     const prevFooterComponent = this.#footerComponent;
-    this.#footerComponent = new FooterStatisticsView(this.cards);
+    this.#footerComponent = new FooterStatisticsView(this.cards.length);
 
     const footerStatisticsContainerElement = document.querySelector('.footer__statistics');
 
