@@ -28,7 +28,7 @@ export default class PopupCommentsListView extends AbstractView {
   };
 
   #commentDeleteClickHandler = (evt) => {
-    evt.stopPropagation();
+    evt.preventDefault();
     this._callback.commentDeleteClick(evt.target.dataset.commentId);
   };
 }

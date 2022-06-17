@@ -60,7 +60,7 @@ export default class CommentsPresenter {
     this.#commentPresenterList.clear();
   };
 
-  #removeComment = (commentId) => {
+  #deleteComment = (commentId) => {
     this.#handleViewAction(UserAction.DELETE_COMMENT, UpdateType.MAJOR, commentId);
   };
 
@@ -77,7 +77,7 @@ export default class CommentsPresenter {
     render(this.#popupCommentsListComponent, this.#commentsContainer, RenderPosition.AFTEREND);
     render(this.#popupNewCommentComponent, this.#popupCommentsListComponent.element, RenderPosition.BEFOREEND);
     this.#renderComments();
-    this.#popupCommentsListComponent.setDeleteButtonClickHandler(this.#removeComment);
+    this.#popupCommentsListComponent.setDeleteButtonClickHandler(this.#deleteComment);
     this.#popupNewCommentComponent.setAddCommentKeyDownHandler(this.#addComment);
 
     remove(prevPopupCommentsListComponent);

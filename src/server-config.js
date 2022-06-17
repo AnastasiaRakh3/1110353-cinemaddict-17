@@ -4,6 +4,8 @@ const AUTHORIZATION = 'Basic hS2sfS445555552j';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 export {END_POINT, AUTHORIZATION, Method};

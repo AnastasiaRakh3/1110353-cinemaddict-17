@@ -48,7 +48,7 @@ export default class PopupNewCommentView extends AbstractStatefulView {
     });
   };
 
-  #commentSendHandler = (evt) => {
+  #commentAddHandler = (evt) => {
     if (evt.keyCode === 13 && evt.ctrlKey) {
       this._callback.commentAddKeyDown(PopupNewCommentView.parseStateToComment(this._state));
     }
@@ -68,7 +68,7 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   #setInnerHandlers = () => {
     this.element.querySelector('.film-details__emoji-list').addEventListener('input', this.#emojiChooseHandler);
-    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentSendHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddHandler);
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
   };
 

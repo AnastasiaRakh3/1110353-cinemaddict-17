@@ -16,12 +16,12 @@ export default class CommentsApiService extends ApiService {
   }
 
   // Для PUT запроса
-  addComment = async (comment) => { // async опеределяет асин.функцию, результатом будет новый промис
+  addComment = async (newComment) => { // async опеределяет асин.функцию, результатом будет новый промис
     // Отправляет запрос
     const response = await this._load({ // await дожидается окончание выполнение запроса
       url: `comments/${this.#cardId}`,
-      method: Method.PUT,
-      body: JSON.stringify(comment), // JSON.stringify преобразует карточку в строку JSON
+      method: Method.POST,
+      body: JSON.stringify(newComment), // JSON.stringify преобразует карточку в строку JSON
       headers: new Headers({'Content-Type': 'application/json'}), //Определяет тип содерж-го
     });
 
@@ -30,4 +30,15 @@ export default class CommentsApiService extends ApiService {
 
     return parsedResponse;
   };
+
+  deleteComment = async (commentId) => {
+    const response = await this._load({
+      url: `comments/${commentId}`,
+      method: Method.DELETE,
+    });
+
+    return response;
+  };
+
+
 }

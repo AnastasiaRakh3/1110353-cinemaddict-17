@@ -31,31 +31,35 @@ export default class CommentsModel extends Observable {
   addComment = async (updateType, update) => {
 
     try {
-      const addedComment = await this.#commentsApiService.addComment(update);
-      console.log(addedComment);
+      const card = await this.#commentsApiService.addComment(update);
+      const newComment = card.comments[card.comments.length - 1];
       this.#comments = [
         ...this.#comments,
-        addedComment,
+        newComment,
       ];
-
-      this._notify(updateType, addedComment);
+      this._notify(updateType, newComment);
     } catch(err) {
       throw new Error('Can\'t add comment');
     }
   };
 
-  deleteComment = (updateType, updatedCommentId) => {
-    const index = this.#comments.findIndex((comment) => comment.id === updatedCommentId);
+  deleteComment = async (updateType, commentId) => {
+    const index = this.#comments.findIndex((comment) => comment.id === commentId);
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting comment');
     }
 
-    this.#comments = [
-      ...this.#comments.slice(0, index),
-      ...this.#comments.slice(index + 1),
-    ];
-
-    this._notify(updateType);
+    try {
+      // Метода удаления коммента на сервере ничего не возвращает, так как удаление
+      await this.#commentsApiService.deleteComment(commentId);
+      this.#comments = [
+        ...this.#comments.slice(0, index),
+        ...this.#comments.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch(err) {
+      throw new Error('Can\'t delete comment');
+    }
   };
 }
