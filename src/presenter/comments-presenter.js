@@ -23,6 +23,21 @@ export default class CommentsPresenter {
     return [...this.#commentsModel.filmComments];
   }
 
+  init = () => {
+    const prevPopupCommentsListComponent = this.#popupCommentsListComponent;
+
+    this.#popupCommentsListComponent = new PopupCommentsListView(this.commentsList.length);
+    this.#popupNewCommentComponent = new PopupNewCommentView();
+
+    render(this.#popupCommentsListComponent, this.#commentsContainer, RenderPosition.AFTEREND);
+    render(this.#popupNewCommentComponent, this.#popupCommentsListComponent.element, RenderPosition.BEFOREEND);
+    this.#renderComments();
+    this.#popupCommentsListComponent.setDeleteButtonClickHandler(this.#deleteComment);
+    this.#popupNewCommentComponent.setAddCommentKeyDownHandler(this.#addComment);
+
+    remove(prevPopupCommentsListComponent);
+  };
+
   #handleViewAction = (actionType, updateType, update) => {
     // actionType - добавить или удалить комментарий
     switch (actionType) {
@@ -66,20 +81,5 @@ export default class CommentsPresenter {
 
   #addComment = (newComment) => {
     this.#handleViewAction(UserAction.ADD_COMMENT, UpdateType.MAJOR, newComment);
-  };
-
-  init = () => {
-    const prevPopupCommentsListComponent = this.#popupCommentsListComponent;
-
-    this.#popupCommentsListComponent = new PopupCommentsListView(this.commentsList.length);
-    this.#popupNewCommentComponent = new PopupNewCommentView();
-
-    render(this.#popupCommentsListComponent, this.#commentsContainer, RenderPosition.AFTEREND);
-    render(this.#popupNewCommentComponent, this.#popupCommentsListComponent.element, RenderPosition.BEFOREEND);
-    this.#renderComments();
-    this.#popupCommentsListComponent.setDeleteButtonClickHandler(this.#deleteComment);
-    this.#popupNewCommentComponent.setAddCommentKeyDownHandler(this.#addComment);
-
-    remove(prevPopupCommentsListComponent);
   };
 }

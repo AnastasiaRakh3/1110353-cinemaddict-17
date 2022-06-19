@@ -1,9 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeCommentDate } from '../utils/card.js';
+import { showDateInTimeString } from '../utils/card.js';
 
 const createPopupCommentTemplate = (commentElement) => {
   const { id, author, comment, date, emotion } = commentElement;
-  const commentDate = humanizeCommentDate(date);
 
   return `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
@@ -13,7 +12,7 @@ const createPopupCommentTemplate = (commentElement) => {
     <p class="film-details__comment-text">${comment}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
-      <span class="film-details__comment-day">${commentDate}</span>
+      <span class="film-details__comment-day">${showDateInTimeString(date)}</span>
       <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
     </p>
   </div>

@@ -1,4 +1,3 @@
-
 import FilmsBlockView from '../view/films-block-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
@@ -171,7 +170,6 @@ export default class FilmsBoardPresenter {
   #renderFilmsSection = () => {
     if (this.#isLoading) {
       this.#renderLoading();
-
       return;
     }
 
