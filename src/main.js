@@ -1,5 +1,5 @@
 import FiltersPresenter from './presenter/filters-presenter.js';
-import FilmsBoardPresenter from './presenter/films-board-presenter.js';
+import FilmsBoardPresenter from './presenter/films/films-board-presenter.js';
 import UserPresenter from './presenter/user-presenter.js';
 import FooterPresenter from './presenter/footer-presenter.js';
 import FilmCardsModel from './model/film-cards-model.js';

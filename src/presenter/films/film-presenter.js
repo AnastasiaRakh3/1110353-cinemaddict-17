@@ -1,13 +1,13 @@
-import FilmCardView from '../view/films-section/film-card-view.js';
-import PopupView from '../view/popup/popup-view.js';
-import PopupFilmControls from '../view/popup/popup-film-controls-view.js';
-import CommentsModel from '../model/comments-model.js';
-import CommentsPresenter from './comments-presenter.js';
-import CommentsApiService from '../api/comments-api-service.js';
-import { END_POINT, AUTHORIZATION } from '../server-config.js';
-import { UserAction, UpdateType } from '../const.js';
-import { getTodayDate } from '../utils/datetime.js';
-import { render, remove, replace } from '../framework/render.js';
+import FilmCardView from '../../view/films-section/film-card-view.js';
+import PopupView from '../../view/popup/popup-view.js';
+import PopupFilmControls from '../../view/popup/popup-film-controls-view.js';
+import CommentsModel from '../../model/comments-model.js';
+import CommentsPresenter from '../comments/comments-presenter.js';
+import CommentsApiService from '../../api/comments-api-service.js';
+import { END_POINT, AUTHORIZATION } from '../../server-config.js';
+import { UserAction, UpdateType } from '../../const.js';
+import { getTodayDate } from '../../utils/datetime.js';
+import { render, remove, replace } from '../../framework/render.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',

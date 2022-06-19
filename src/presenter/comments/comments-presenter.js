@@ -1,9 +1,9 @@
-import PopupCommentsListView from '../view/popup/popup-comments-list-view.js';
-import PopupNewCommentView from '../view/popup/popup-new-comment.js';
+import PopupCommentsListView from '../../view/popup/popup-comments-list-view.js';
+import PopupNewCommentView from '../../view/popup/popup-new-comment.js';
 import CommentPresenter from './comment-presenter.js';
-import { UserAction, UpdateType, TimeLimit } from '../const.js';
-import { remove, render, RenderPosition } from '../framework/render.js';
-import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+import { UserAction, UpdateType, TimeLimit } from '../../const.js';
+import { remove, render, RenderPosition } from '../../framework/render.js';
+import UiBlocker from '../../framework/ui-blocker/ui-blocker.js';
 
 export default class CommentsPresenter {
   #commentsModel = null;

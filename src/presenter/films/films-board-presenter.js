@@ -1,17 +1,17 @@
-import FilmsBlockView from '../view/films-section/films-block-view';
-import FilmsListView from '../view/films-section/films-list-view.js';
-import FilmsListContainerView from '../view/films-section/films-list-container-view.js';
-import LoadMoreButtonView from '../view/films-section/loadmore-button-view.js';
-import NoFilmsListTitleView from '../view/films-section/no-films-list-title-view.js';
-import FilmsListTitleView from '../view/films-section/films-list-title-view.js';
-import LoadingView from '../view/loading-view.js';
+import FilmsBlockView from '../../view/films-section/films-block-view';
+import FilmsListView from '../../view/films-section/films-list-view.js';
+import FilmsListContainerView from '../../view/films-section/films-list-container-view.js';
+import LoadMoreButtonView from '../../view/films-section/loadmore-button-view.js';
+import NoFilmsListTitleView from '../../view/films-section/no-films-list-title-view.js';
+import FilmsListTitleView from '../../view/films-section/films-list-title-view.js';
+import LoadingView from '../../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
-import SortPresenter from './sort-presenter.js';
-import { SortType, UpdateType, FilterType, TimeLimit } from '../const.js';
-import { sortCardsByDate, sortCardsByRating } from '../utils/sort.js';
-import { filter } from '../utils/filter.js';
-import { render, RenderPosition, remove } from '../framework/render.js';
-import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+import SortPresenter from '../sort-presenter.js';
+import { SortType, UpdateType, FilterType, TimeLimit } from '../../const.js';
+import { sortCardsByDate, sortCardsByRating } from '../../utils/sort.js';
+import { filter } from '../../utils/filter.js';
+import { render, RenderPosition, remove } from '../../framework/render.js';
+import UiBlocker from '../../framework/ui-blocker/ui-blocker.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
