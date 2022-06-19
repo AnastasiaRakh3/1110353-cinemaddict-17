@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizePopupFilmDate, showFilmRunTime, checkFilmRunTime, checkTotalRating } from '../utils/card.js';
+import { humanizePopupFilmDate, humanizeFilmRunTime } from '../utils/datetime.js';
+import { checkTotalRating } from '../utils/other.js';
 
 const createPopupTemplate = (filmCard) => {
   const { filmInfo: { title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release: { date, releaseCountry }, runtime, genre, description }, userDetails: { watchlist, alreadyWatched, favorite } } = filmCard;
@@ -52,7 +53,7 @@ const createPopupTemplate = (filmCard) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${checkFilmRunTime(showFilmRunTime(runtime))}</td>
+              <td class="film-details__cell">${humanizeFilmRunTime(runtime)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

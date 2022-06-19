@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeFilmDate, showFilmRunTime, checkFilmRunTime, checkTotalRating, checkDescriptionLength } from '../utils/card.js';
+import { humanizeCardFilmDate, humanizeFilmRunTime } from '../utils/datetime.js';
+import { checkTotalRating, checkDescriptionLength } from '../utils/other.js';
 
 const createFilmCardTemplate = (filmCard) => {
   const { comments, filmInfo: { title, totalRating, poster, release: { date }, runtime, genre, description }, userDetails: { watchlist, alreadyWatched, favorite } } = filmCard;
@@ -13,8 +14,8 @@ const createFilmCardTemplate = (filmCard) => {
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${checkTotalRating(totalRating)}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${humanizeFilmDate(date)}</span>
-      <span class="film-card__duration">${checkFilmRunTime(showFilmRunTime(runtime))}</span>
+      <span class="film-card__year">${humanizeCardFilmDate(date)}</span>
+      <span class="film-card__duration">${humanizeFilmRunTime(runtime)}</span>
       <span class="film-card__genre">${genre.join(', ')}</span>
     </p>
     <img src="${poster}" alt="" class="film-card__poster">

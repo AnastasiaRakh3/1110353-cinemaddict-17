@@ -9,7 +9,7 @@ import FilmPresenter from './film-presenter.js';
 import SortPresenter from './sort-presenter.js';
 import FilmsExtraPresenter from './films-extra-presenter.js';
 import { SortType, UpdateType, FilterType, Extra } from '../const.js';
-import { sortCardUp, sortCardRating } from '../utils/card.js';
+import { sortCardsByDate, sortCardsByRating } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
 import { render, RenderPosition, remove } from '../framework/render.js';
 
@@ -54,9 +54,9 @@ export default class FilmsBoardPresenter {
 
     switch (this.#currentSortType) {
       case SortType.DATE_UP:
-        return filteredCards.sort(sortCardUp);
+        return filteredCards.sort(sortCardsByDate);
       case SortType.RATING:
-        return filteredCards.sort(sortCardRating);
+        return filteredCards.sort(sortCardsByRating);
     }
     return filteredCards;
   }

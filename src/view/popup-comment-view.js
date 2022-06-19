@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { showDateInTimeString } from '../utils/card.js';
+import { displayRelativeTimeDate } from '../utils/datetime.js';
 
 const createPopupCommentTemplate = (commentElement) => {
   const { id, author, comment, date, emotion } = commentElement;
@@ -12,7 +12,7 @@ const createPopupCommentTemplate = (commentElement) => {
     <p class="film-details__comment-text">${comment}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
-      <span class="film-details__comment-day">${showDateInTimeString(date)}</span>
+      <span class="film-details__comment-day">${displayRelativeTimeDate(date)}</span>
       <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
     </p>
   </div>

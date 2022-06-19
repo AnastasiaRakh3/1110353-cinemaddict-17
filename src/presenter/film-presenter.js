@@ -5,7 +5,7 @@ import CommentsPresenter from './comments-presenter.js';
 import CommentsApiService from '../api/comments-api-service.js';
 import { END_POINT, AUTHORIZATION } from '../server-config.js';
 import { UserAction, UpdateType } from '../const.js';
-import { getTodayDate } from '../utils/card.js';
+import { getTodayDate } from '../utils/datetime.js';
 import { render, remove, replace } from '../framework/render.js';
 
 const Mode = {
