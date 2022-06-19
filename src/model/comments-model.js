@@ -8,19 +8,15 @@ export default class CommentsModel extends Observable {
   constructor(commentsApiService) {
     super();
     this.#commentsApiService = commentsApiService;
-
-    // this.#commentsApiService.comments.then((comments) => {
-    //   console.log('наши комменты с сервера', comments);
-    // });
   }
 
   get filmComments() {
     return this.#comments;
   }
 
-  init = async () => { // async опеределяет асин.функцию, результатом будет новый промис
+  init = async () => {
     try {
-      this.#comments = await this.#commentsApiService.comments; // await дожидается окончание выполнение запроса
+      this.#comments = await this.#commentsApiService.comments;
     } catch (err) {
       this.#comments = [];
     }
@@ -51,7 +47,6 @@ export default class CommentsModel extends Observable {
     }
 
     try {
-      // Метода удаления коммента на сервере ничего не возвращает, так как удаление
       await this.#commentsApiService.deleteComment(commentId);
       this.#comments = [
         ...this.#comments.slice(0, index),

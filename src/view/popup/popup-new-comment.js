@@ -2,7 +2,6 @@ import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js
 import { Emotion } from '../../const.js';
 import he from 'he';
 
-// Чтобы гарантировать порядок эмоджи
 const EmojiOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY];
 
 const createPopupNewCommentTemplate = (state) => {
@@ -29,9 +28,8 @@ const createPopupNewCommentTemplate = (state) => {
 export default class PopupNewCommentView extends AbstractStatefulView {
   constructor(comment) {
     super();
-    // В нем будет объект с новыми значениями ключей
-    this._state = PopupNewCommentView.parseCommentToState(comment);
 
+    this._state = PopupNewCommentView.parseCommentToState(comment);
     this.#setInnerHandlers();
   }
 
@@ -41,7 +39,6 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   #emojiChooseHandler = (evt) => {
     const targetInput = evt.target;
-    // Обновляем объект новыми свойствами и перерисовываем элемент
     this.updateElement({
       localEmotion: targetInput.value,
     });
@@ -59,7 +56,6 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   #commentInputHandler = (evt) => {
     const targetInput = evt.target;
-    // Добавляем в объект новые свойства
     this._setState({
       localComment: targetInput.value,
     });
@@ -71,17 +67,11 @@ export default class PopupNewCommentView extends AbstractStatefulView {
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
   };
 
-  // Добавляем в объект новые свойства, значение которых потом при parseStateToComment присвоим другим ключам: comment и emotion
   static parseCommentToState = (comment) => ({
     ...comment,
     localComment: '',
     localEmotion: null,
   });
-
-  // Присвоим нужным ключам (comment и emotion), значение свойств тех ключей, с которыми работали (localComment, localEmotion)
-  // Если localComment, localEmotion пустые, то по умол. передаем пустую строку и дефолтный смайл
-  // Удаляем их: localComment, localEmotion
-  // Возвращаем объект с возможно изменеными значениями свойств
 
   static parseStateToComment = (state) => {
     const commentData = { ...state };

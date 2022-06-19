@@ -50,10 +50,10 @@ export default class FiltersView extends AbstractView {
   };
 
   #filterTypeChangeHandler = (evt) => {
-    // Проверка, что нажали именно на ссылку
     if (evt.target.tagName !== 'A') {
       return;
     }
+
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.dataset.filterType);
   };

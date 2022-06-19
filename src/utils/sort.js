@@ -1,7 +1,5 @@
 import dayjs from 'dayjs';
 
-// Функция помещает карты без даты в конце списка,
-// возвращая нужный вес для колбэка sort
 const getWeightForNullDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return 0;

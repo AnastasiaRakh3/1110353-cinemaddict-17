@@ -1,7 +1,5 @@
 import dayjs from 'dayjs';
-// для поддержки работы с продолжительностью
 import duration from 'dayjs/plugin/duration';
-// для форматирования строкового представления даты в формате относительного времени (например, 3 часа назад)
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 
 dayjs.extend(duration);

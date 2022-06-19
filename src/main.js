@@ -21,9 +21,4 @@ userPresenter.init();
 filtersPresenter.init();
 footerPresenter.init();
 filmsBoardPresenter.init();
-//почему в демо в конце? ведь получаем карточки которые нужны для отрисовки
 filmCardsModel.init();
-// filmCardsModel.init()
-//   .finally(() => { // Выполнит вне зависимости от того, завершился промис успешно или нет
-//     // Отрендерить фильтры и сортировку?
-//   });

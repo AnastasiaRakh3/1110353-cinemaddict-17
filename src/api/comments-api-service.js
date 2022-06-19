@@ -10,24 +10,19 @@ export default class CommentsApiService extends ApiService {
   }
 
   get comments() {
-    // По умолчанию GET запрос
     return this._load({ url: `comments/${this.#cardId}` })
       .then(ApiService.parseResponse);
   }
 
-  // Для PUT запроса
-  addComment = async (newComment) => { // async опеределяет асин.функцию, результатом будет новый промис
-    // Отправляет запрос
-    const response = await this._load({ // await дожидается окончание выполнение запроса
+  addComment = async (newComment) => {
+    const response = await this._load({
       url: `comments/${this.#cardId}`,
       method: Method.POST,
-      body: JSON.stringify(newComment), // JSON.stringify преобразует карточку в строку JSON
-      headers: new Headers({ 'Content-Type': 'application/json' }), //Определяет тип содерж-го
+      body: JSON.stringify(newComment),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
-    // Принял ответ после отправки, переделал в json формат
     const parsedResponse = await ApiService.parseResponse(response);
-
     return parsedResponse;
   };
 

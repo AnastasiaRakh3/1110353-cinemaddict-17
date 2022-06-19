@@ -56,20 +56,17 @@ export default class FilmPresenter {
 
     this.#setAllHandlers();
 
-    // Проверка на первую отрисовку
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this.#cardComponent, this.#filmListContainer);
       return;
     }
 
-    // Если в режиме просмотра, то попап снова перерисовыватся
     if (this.#mode === Mode.WATCHING) {
       replace(this.#popupComponent, prevPopupComponent);
       this.#commentsPresenter.init();
     }
 
     replace(this.#cardComponent, prevCardComponent);
-
     remove(prevCardComponent);
     remove(prevPopupComponent);
     remove(prevPopupFilmControlsComponent);
@@ -88,7 +85,6 @@ export default class FilmPresenter {
     }
   };
 
-  // Метод закрывает открытый попап
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#closePopup();
@@ -144,7 +140,6 @@ export default class FilmPresenter {
       });
   };
 
-  //  Вызывает метод обновления данных с правильно измененным полем favorite (обновленная карточка)
   #handleFavoriteClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
       UpdateType.PATCH,
