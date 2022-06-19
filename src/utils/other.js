@@ -6,6 +6,7 @@ const checkDescriptionLength = (string) => {
   if (string.length > ALLOWED_DESCRIPTION_LENGTH) {
     return `${string.slice(0, ALLOWED_DESCRIPTION_LENGTH - 1)}...`;
   }
+
   return string;
 };
 
