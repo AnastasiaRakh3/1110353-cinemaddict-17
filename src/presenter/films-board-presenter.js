@@ -8,7 +8,7 @@ import FilmsListTitleView from '../view/films-list-title-view.js';
 import LoadingView from '../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import FilmsListExtraPresenter from './films-lists-extra-presenter.js';
+import FilmsExtraPresenter from './films-extra-presenter.js';
 import { SortType, UpdateType, FilterType, Extra } from '../const.js';
 import { sortCardUp, sortCardRating } from '../utils/card.js';
 import { filter } from '../utils/filter.js';
@@ -20,22 +20,23 @@ export default class FilmsBoardPresenter {
   #filmsBlockContainer = null;
   #cardsModel = null;
   #filtersModel = null;
-  #noFilmsListTitleComponent = null;
 
+  #renderedCardCount = CARD_COUNT_PER_STEP;
+  #isLoading = true;
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL;
+
+  #noFilmsListTitleComponent = null;
+  #sortPresenter = null;
+  // #filmsListExtraPresenter = null;
   #filmsBlockComponent = new FilmsBlockView();
   #filmsListComponent = new FilmsListView();
   #filmsListTitleComponent = new FilmsListTitleView();
   #filmsListContainerComponent = new FilmsListContainerView();
   #loadMoreButtonComponent = new LoadMoreButtonView();
   #loadingComponent = new LoadingView();
-  #renderedCardCount = CARD_COUNT_PER_STEP;
   #filmPresentersList = new Map();
-  #sortPresenter = null;
-  #filmsListExtraPresenter = null;
-  #filmsListExtraPresenterList = new Map();
-  #isLoading = true;
+  #filmsExtraPresenterList = new Map();
 
   constructor(filmsBlockContainer, cardsModel, filtersModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
@@ -193,8 +194,8 @@ export default class FilmsBoardPresenter {
   };
 
   #renderExtraSection = () => {
-    [Extra.TOP_RATED, Extra.MOST_COMMENTED].forEach((extraMode) => this.#filmsListExtraPresenterList.set(extraMode, new FilmsListExtraPresenter(this.#filmsListComponent.element, extraMode, this.#cardsModel)));
-    this.#filmsListExtraPresenterList.forEach((presenter) => presenter.init());
+    [Extra.TOP_RATED, Extra.MOST_COMMENTED].forEach((extraMode) => this.#filmsExtraPresenterList.set(extraMode, new FilmsExtraPresenter(this.#filmsListComponent.element, extraMode, this.#cardsModel)));
+    this.#filmsExtraPresenterList.forEach((presenter) => presenter.init());
   };
 
   // То же самое, что и {нет ключа, нет ключа}, но нужна такая запись, чтобы учесть, что эти ключи могут быть

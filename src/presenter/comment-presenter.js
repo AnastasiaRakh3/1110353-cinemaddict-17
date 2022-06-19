@@ -2,8 +2,9 @@ import PopupCommentView from '../view/popup-comment-view';
 import { render, remove } from '../framework/render';
 
 export default class CommentPresenter {
-  #commentData = null;
   #renderingPlace = null;
+
+  #commentData = null;
   #commentComponent = null;
 
   constructor(renderingPlace) {

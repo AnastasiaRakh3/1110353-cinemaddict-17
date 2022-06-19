@@ -3,6 +3,7 @@ import { render, replace, remove } from '../framework/render';
 
 export default class FooterPresenter {
   #cardsModel = null;
+
   #footerComponent = null;
 
   constructor(cardsModel) {

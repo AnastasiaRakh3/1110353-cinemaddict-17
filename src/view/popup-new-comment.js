@@ -27,7 +27,6 @@ const createPopupNewCommentTemplate = (state) => {
 };
 
 export default class PopupNewCommentView extends AbstractStatefulView {
-
   constructor(comment) {
     super();
     // В нем будет объект с новыми значениями ключей

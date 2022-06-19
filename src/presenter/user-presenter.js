@@ -3,9 +3,9 @@ import { UserStatus } from '../const';
 import { render, remove, replace } from '../framework/render';
 
 export default class UserPresenter {
-  #userModel = null;
-  #cardsModel = null;
   #renderingPlace = null;
+  #cardsModel = null;
+  #userModel = null;
 
   #userComponent = null;
   #currentUserStatus = null;

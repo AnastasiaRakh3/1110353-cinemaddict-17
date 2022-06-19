@@ -6,7 +6,7 @@ import { render } from '../framework/render.js';
 
 const CARDS_SHOWN_IN_EXTRA_SECTION = 2;
 
-export default class FilmsListExtraPresenter {
+export default class FilmsExtraPresenter {
   #renderingPlace = null;
   #title = null;
   #cardsModel = null;

@@ -5,11 +5,10 @@ import { render, replace, remove, RenderPosition } from '../framework/render.js'
 
 export default class SortPresenter {
   #renderingPlace = null;
-
+  #changeData = null;
   // ??
   #currentSortType = SortType.DEFAULT;
   #sortComponent = null;
-  #changeData = null;
 
   constructor(renderingPlace, changeData) {
     this.#renderingPlace = renderingPlace;

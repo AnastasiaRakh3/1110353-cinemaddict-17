@@ -26,7 +26,6 @@ export default class FilmPresenter {
   #popupComponent = null;
   #commentsPresenter = null;
   #commentsModel = null;
-  #cardsModel = null;
   #bodyComponent = bodyElement;
 
   constructor(filmListContainer, changeData, changeMode) {
