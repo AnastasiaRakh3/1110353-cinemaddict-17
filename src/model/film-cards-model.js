@@ -22,7 +22,7 @@ export default class FilmCardsModel extends Observable {
     try {
       const cards = await this.#cardsApiService.cards; // await дожидается окончание выполнение запроса
       this.#filmCards = cards.map(this.#adaptToClient);
-    } catch(err) {
+    } catch (err) {
       this.#filmCards = [];
     }
 
@@ -48,21 +48,26 @@ export default class FilmCardsModel extends Observable {
         ...this.#filmCards.slice(index + 1),
       ];
       this._notify(updateType, updatedCard);
-    } catch(err) {
+    } catch (err) {
       throw new Error('Can\'t update card');
     }
   };
 
   #adaptToClient = (card) => {
-    const adaptedTask = {...card,
-      filmInfo: {...card['film_info'],
+    const adaptedTask = {
+      ...card,
+      filmInfo: {
+        ...card['film_info'],
         ageRating: card['film_info']['age_rating'],
         alternativeTitle: card['film_info']['alternative_title'],
-        release: {...card['film_info']['release'],
-          releaseCountry: card['film_info']['release']['release_country']},
+        release: {
+          ...card['film_info']['release'],
+          releaseCountry: card['film_info']['release']['release_country']
+        },
         totalRating: card['film_info']['total_rating'],
       },
-      userDetails: {...card['user_details'],
+      userDetails: {
+        ...card['user_details'],
         alreadyWatched: card['user_details']['already_watched'],
         watchingDate: card['user_details']['watching_date'],
       }

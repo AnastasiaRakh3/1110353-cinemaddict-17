@@ -1,8 +1,8 @@
 import FilmsExtraListView from '../view/films-extra-view.js';
-import { render } from '../framework/render.js';
-import { sortCardRating, sortCardMostCommented } from '../utils/card.js';
-import { Extra } from '../const.js';
 import FilmPresenter from './film-presenter.js';
+import { Extra } from '../const.js';
+import { sortCardRating, sortCardMostCommented } from '../utils/card.js';
+import { render } from '../framework/render.js';
 
 const CARDS_SHOWN_IN_EXTRA_SECTION = 2;
 
@@ -37,7 +37,7 @@ export default class FilmsListExtraPresenter {
 
   #renderExtraCards = () => {
     this.extraCards.forEach((card) => this.#filmsExtraPresenterList.set(card.id, new FilmPresenter(this.#filmsExtraListComponent, this.#changeData, this.#changeMode)));
-    this.#filmsExtraPresenterList.forEach((presenter) => {});
+    this.#filmsExtraPresenterList.forEach((presenter) => { });
   };
 
   #renderFilmsListExtra = () => {

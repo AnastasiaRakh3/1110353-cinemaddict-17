@@ -1,10 +1,9 @@
 import SortView from '../view/sort-view.js';
-import {SortType} from '../const.js';
+import { SortType } from '../const.js';
 import { render, replace, remove, RenderPosition } from '../framework/render.js';
 
 
 export default class SortPresenter {
-
   #renderingPlace = null;
 
   // ??
@@ -12,7 +11,7 @@ export default class SortPresenter {
   #sortComponent = null;
   #changeData = null;
 
-  constructor (renderingPlace, changeData) {
+  constructor(renderingPlace, changeData) {
     this.#renderingPlace = renderingPlace;
     this.#changeData = changeData;
   }
@@ -23,7 +22,7 @@ export default class SortPresenter {
     this.#sortComponent = new SortView(currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortClick);
 
-    if(prevSortComponent === null) {
+    if (prevSortComponent === null) {
       render(this.#sortComponent, this.#renderingPlace, RenderPosition.BEFOREBEGIN);
       return;
     }

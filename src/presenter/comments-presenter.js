@@ -1,8 +1,8 @@
-import { UserAction, UpdateType } from '../const.js';
-import {remove, render, RenderPosition} from '../framework/render.js';
 import PopupCommentsListView from '../view/popup-comments-list-view.js';
 import PopupNewCommentView from '../view/popup-new-comment.js';
 import CommentPresenter from './comment-presenter.js';
+import { UserAction, UpdateType } from '../const.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
 
 export default class CommentsPresenter {
   #commentsModel = null;
@@ -12,7 +12,7 @@ export default class CommentsPresenter {
   #popupNewCommentComponent = null;
   #commentPresenterList = new Map();
 
-  constructor (commentsModel, commentsContainer) {
+  constructor(commentsModel, commentsContainer) {
     this.#commentsModel = commentsModel;
     this.#commentsContainer = commentsContainer;
 
@@ -24,7 +24,7 @@ export default class CommentsPresenter {
   }
 
   #handleViewAction = (actionType, updateType, update) => {
-  // actionType - добавить или удалить комментарий
+    // actionType - добавить или удалить комментарий
     switch (actionType) {
       case UserAction.DELETE_COMMENT:
         this.#commentsModel.deleteComment(updateType, update);

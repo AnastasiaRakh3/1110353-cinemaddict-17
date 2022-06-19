@@ -1,8 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeCommentDate} from '../utils/card.js';
+import { humanizeCommentDate } from '../utils/card.js';
 
 const createPopupCommentTemplate = (commentElement) => {
-  const {id, author, comment, date, emotion} = commentElement;
+  const { id, author, comment, date, emotion } = commentElement;
   const commentDate = humanizeCommentDate(date);
 
   return `<li class="film-details__comment">

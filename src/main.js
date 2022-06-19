@@ -1,11 +1,11 @@
 import FiltersPresenter from './presenter/filters-presenter.js';
 import FilmsBoardPresenter from './presenter/films-board-presenter.js';
+import UserPresenter from './presenter/user-presenter.js';
+import FooterPresenter from './presenter/footer-presenter.js';
 import FilmCardsModel from './model/film-cards-model.js';
 import FiltersModel from './model/filters-model.js';
 import UserModel from './model/user-model.js';
-import UserPresenter from './presenter/user-presenter.js';
 import CardsApiService from './api/cards-api-service.js';
-import FooterPresenter from './presenter/footer-presenter.js';
 import { END_POINT, AUTHORIZATION } from './server-config.js';
 
 const siteHeaderElement = document.querySelector('.header');

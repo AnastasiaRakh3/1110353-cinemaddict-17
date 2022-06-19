@@ -1,7 +1,7 @@
 import FiltersView from '../view/filters-view';
-import { render, replace, remove } from '../framework/render';
 import { FilterType, UpdateType } from '../const';
 import { filter } from '../utils/filter';
+import { render, replace, remove } from '../framework/render';
 
 export default class FiltersPresenter {
   #renderingPlace = null;
@@ -10,7 +10,7 @@ export default class FiltersPresenter {
 
   #filtersComponent = null;
 
-  constructor (renderingPlace, cardsModel, filtersModel) {
+  constructor(renderingPlace, cardsModel, filtersModel) {
     this.#cardsModel = cardsModel;
     this.#renderingPlace = renderingPlace;
     this.#filtersModel = filtersModel;
@@ -19,7 +19,7 @@ export default class FiltersPresenter {
     this.#filtersModel.addObserver(this.#handleModelEvent);
   }
 
-  get filters () {
+  get filters() {
     const filmCards = this.#cardsModel.filmCards;
 
     return [

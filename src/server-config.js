@@ -8,4 +8,4 @@ const Method = {
   DELETE: 'DELETE',
 };
 
-export {END_POINT, AUTHORIZATION, Method};
+export { END_POINT, AUTHORIZATION, Method };

@@ -1,12 +1,12 @@
-import {render, remove, replace} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupView from '../view/popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
-import {UserAction, UpdateType} from '../const.js';
-import { getTodayDate } from '../utils/card.js';
 import CommentsApiService from '../api/comments-api-service.js';
 import { END_POINT, AUTHORIZATION } from '../server-config.js';
+import { UserAction, UpdateType } from '../const.js';
+import { getTodayDate } from '../utils/card.js';
+import { render, remove, replace } from '../framework/render.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -108,21 +108,24 @@ export default class FilmPresenter {
   #handleWatchlistClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
       UpdateType.PATCH,
-      {...this.#card,
+      {
+        ...this.#card,
         userDetails: {
           ...this.#card.userDetails,
-          watchlist: !this.#card.userDetails.watchlist,}
+          watchlist: !this.#card.userDetails.watchlist,
+        }
       });
   };
 
   #handleAlreadyWatchedClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
       UpdateType.PATCH,
-      {...this.#card,
+      {
+        ...this.#card,
         userDetails: {
           ...this.#card.userDetails,
           alreadyWatched: !this.#card.userDetails.alreadyWatched,
-          watchingDate: !this.#card.userDetails.alreadyWatched? getTodayDate(): null,
+          watchingDate: !this.#card.userDetails.alreadyWatched ? getTodayDate() : null,
         }
       });
   };
@@ -131,10 +134,12 @@ export default class FilmPresenter {
   #handleFavoriteClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
       UpdateType.PATCH,
-      {...this.#card,
+      {
+        ...this.#card,
         userDetails: {
           ...this.#card.userDetails,
-          favorite: !this.#card.userDetails.favorite,}
+          favorite: !this.#card.userDetails.favorite,
+        }
       });
   };
 

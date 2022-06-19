@@ -1,8 +1,8 @@
-import {UserStatus} from '../const';
 import Observable from '../framework/observable';
+import { UserStatus } from '../const';
 
 export default class UserModel extends Observable {
-  #userStatus =  UserStatus.NO_STATUS;
+  #userStatus = UserStatus.NO_STATUS;
 
   get userStatus() {
     return this.#userStatus;

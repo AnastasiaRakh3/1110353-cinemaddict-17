@@ -9,7 +9,7 @@ const createPopupNewCommentTemplate = (state) => {
   const getSelectedEmojiPicture = () => state.localEmotion !== null ? `<img src="images/emoji/${state.localEmotion}.png" width="55" height="55" alt="emoji-${state.localEmotion}">` : '';
   const checkIsEmojiSelected = (emoji) => emoji === state.localEmotion ? 'checked' : '';
 
-  const createListElement = (emoji) =>  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)}>
+  const createListElement = (emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)}>
   <label class="film-details__emoji-label" for="emoji-${emoji}">
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`;
@@ -28,7 +28,7 @@ const createPopupNewCommentTemplate = (state) => {
 
 export default class PopupNewCommentView extends AbstractStatefulView {
 
-  constructor (comment) {
+  constructor(comment) {
     super();
     // В нем будет объект с новыми значениями ключей
     this._state = PopupNewCommentView.parseCommentToState(comment);
@@ -73,7 +73,8 @@ export default class PopupNewCommentView extends AbstractStatefulView {
   };
 
   // Добавляем в объект новые свойства, значение которых потом при parseStateToComment присвоим другим ключам: comment и emotion
-  static parseCommentToState = (comment) => ({...comment,
+  static parseCommentToState = (comment) => ({
+    ...comment,
     localComment: '',
     localEmotion: null,
   });
@@ -84,7 +85,7 @@ export default class PopupNewCommentView extends AbstractStatefulView {
   // Возвращаем объект с возможно изменеными значениями свойств
 
   static parseStateToComment = (state) => {
-    const commentData = {...state};
+    const commentData = { ...state };
 
     commentData.comment = commentData.localComment;
 

@@ -1,8 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizePopupFilmDate, showFilmRunTime, checkFilmRunTime, checkTotalRating} from '../utils/card.js';
+import { humanizePopupFilmDate, showFilmRunTime, checkFilmRunTime, checkTotalRating } from '../utils/card.js';
 
 const createPopupTemplate = (filmCard) => {
-  const {filmInfo: {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release: {date, releaseCountry}, runtime, genre, description}, userDetails: {watchlist, alreadyWatched, favorite}} = filmCard;
+  const { filmInfo: { title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release: { date, releaseCountry }, runtime, genre, description }, userDetails: { watchlist, alreadyWatched, favorite } } = filmCard;
 
   const inWatchListClassName = watchlist ? 'film-details__control-button--active' : '';
   const inAlreadyWatchedClassName = alreadyWatched ? 'film-details__control-button--active' : '';
@@ -85,7 +85,7 @@ const createPopupTemplate = (filmCard) => {
 export default class PopupView extends AbstractView {
   #filmCard = null;
 
-  constructor (filmCard) {
+  constructor(filmCard) {
     super();
     this.#filmCard = filmCard;
   }

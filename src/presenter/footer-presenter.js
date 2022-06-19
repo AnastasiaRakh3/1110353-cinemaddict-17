@@ -1,5 +1,5 @@
 import FooterStatisticsView from '../view/footer-statistics';
-import {render, replace, remove} from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 
 export default class FooterPresenter {
   #cardsModel = null;
@@ -10,7 +10,7 @@ export default class FooterPresenter {
     this.#cardsModel.addObserver(this.#handleMoviesDatabaseChange);
   }
 
-  get cards () {
+  get cards() {
     return this.#cardsModel.filmCards;
   }
 

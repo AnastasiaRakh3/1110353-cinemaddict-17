@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 // для поддержки работы с продолжительностью
 import duration from 'dayjs/plugin/duration';
+
 dayjs.extend(duration);
 
 const showFilmRunTime = (time) => dayjs.duration(time, 'minutes').format('H[h] mm[m]');
@@ -10,7 +11,7 @@ const humanizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/DD HH:mm
 const getTodayDate = () => dayjs().toISOString();
 
 const checkFilmRunTime = (time) => {
-  if(time.includes('0h')) {
+  if (time.includes('0h')) {
     return time.substr(3);
   }
   return time;
@@ -47,4 +48,4 @@ const sortCardRating = (cardA, cardB) => cardA.filmInfo.totalRating - cardB.film
 
 const sortCardMostCommented = (cardA, cardB) => cardA.comments.length - cardB.comments.length;
 
-export {humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, getTodayDate, checkFilmRunTime, checkTotalRating, checkDescriptionLength, sortCardUp, sortCardRating, showFilmRunTime, sortCardMostCommented};
+export { humanizeFilmDate, humanizePopupFilmDate, humanizeCommentDate, getTodayDate, checkFilmRunTime, checkTotalRating, checkDescriptionLength, sortCardUp, sortCardRating, showFilmRunTime, sortCardMostCommented };

@@ -5,7 +5,7 @@ export default class CardsApiService extends ApiService {
 
   get cards() {
     // По умолчанию GET запрос
-    return this._load({url: 'movies'}) //отправка запроса к серверу, где пока только адрес относит-но сервера
+    return this._load({ url: 'movies' }) //отправка запроса к серверу, где пока только адрес относит-но сервера
       .then(ApiService.parseResponse); //стат.метод parseResponse вызывается только у самого класса, обработки ответа (превращает в json формат)
   }
 
@@ -16,7 +16,7 @@ export default class CardsApiService extends ApiService {
       url: `movies/${card.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(card)), // JSON.stringify преобразует карточку в строку JSON
-      headers: new Headers({'Content-Type': 'application/json'}), //Определяет тип содерж-го
+      headers: new Headers({ 'Content-Type': 'application/json' }), //Определяет тип содерж-го
     });
 
     // Принял ответ после отправки, переделал в json формат
@@ -26,15 +26,20 @@ export default class CardsApiService extends ApiService {
   };
 
   #adaptToServer = (card) => {
-    const adaptedTask = {...card,
-      'film_info': {...card.filmInfo,
+    const adaptedTask = {
+      ...card,
+      'film_info': {
+        ...card.filmInfo,
         'age_rating': card.filmInfo.ageRating,
         'alternative_title': card.filmInfo.alternativeTitle,
-        'release': {...card.filmInfo.release,
-          'release_country': card.filmInfo.release.releaseCountry},
+        'release': {
+          ...card.filmInfo.release,
+          'release_country': card.filmInfo.release.releaseCountry
+        },
         'total_rating': card.filmInfo.totalRating,
       },
-      'user_details': {...card.userDetails,
+      'user_details': {
+        ...card.userDetails,
         'already_watched': card.userDetails.alreadyWatched,
         'watching_date': card.userDetails.watchingDate,
       },

@@ -21,7 +21,7 @@ export default class CommentsModel extends Observable {
   init = async () => { // async опеределяет асин.функцию, результатом будет новый промис
     try {
       this.#comments = await this.#commentsApiService.comments; // await дожидается окончание выполнение запроса
-    } catch(err) {
+    } catch (err) {
       this.#comments = [];
     }
 
@@ -38,7 +38,7 @@ export default class CommentsModel extends Observable {
         newComment,
       ];
       this._notify(updateType, newComment);
-    } catch(err) {
+    } catch (err) {
       throw new Error('Can\'t add comment');
     }
   };
@@ -58,7 +58,7 @@ export default class CommentsModel extends Observable {
         ...this.#comments.slice(index + 1),
       ];
       this._notify(updateType);
-    } catch(err) {
+    } catch (err) {
       throw new Error('Can\'t delete comment');
     }
   };

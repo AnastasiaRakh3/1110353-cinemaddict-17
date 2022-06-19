@@ -44,4 +44,4 @@ const Extra = {
   MOST_COMMENTED: 'Most commented',
 };
 
-export {UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType, Extra};
+export { UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType, Extra };

@@ -1,18 +1,18 @@
-import { render, RenderPosition, remove } from '../framework/render.js';
+
 import FilmsBlockView from '../view/films-block-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import LoadMoreButtonView from '../view/loadmore-button-view.js';
-import FilmPresenter from './film-presenter.js';
-import {sortCardUp, sortCardRating} from '../utils/card.js';
-import {SortType, UpdateType, FilterType} from '../const.js';
-import SortPresenter from './sort-presenter.js';
-import { filter } from '../utils/filter.js';
 import NoFilmsListTitleView from '../view/no-films-list-title-view.js';
 import FilmsListTitleView from '../view/films-list-title-view.js';
-import { Extra } from '../const.js';
-import FilmsListExtraPresenter from './films-lists-extra-presenter.js';
 import LoadingView from '../view/loading-view.js';
+import FilmPresenter from './film-presenter.js';
+import SortPresenter from './sort-presenter.js';
+import FilmsListExtraPresenter from './films-lists-extra-presenter.js';
+import { SortType, UpdateType, FilterType, Extra } from '../const.js';
+import { sortCardUp, sortCardRating } from '../utils/card.js';
+import { filter } from '../utils/filter.js';
+import { render, RenderPosition, remove } from '../framework/render.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -114,7 +114,7 @@ export default class FilmsBoardPresenter {
       case UpdateType.MINOR:
         break;
       case UpdateType.MAJOR:
-        this.#clearFilmsSection({resetRenderedCardCount: true, resetSortType: true});
+        this.#clearFilmsSection({ resetRenderedCardCount: true, resetSortType: true });
         this.#renderFilmsSection();
         this.#sortPresenter.init();
         break;
@@ -198,7 +198,7 @@ export default class FilmsBoardPresenter {
   };
 
   // То же самое, что и {нет ключа, нет ключа}, но нужна такая запись, чтобы учесть, что эти ключи могут быть
-  #clearFilmsSection = ({resetRenderedCardCount = false, resetSortType = false} = {}) => {
+  #clearFilmsSection = ({ resetRenderedCardCount = false, resetSortType = false } = {}) => {
     // Обходит карту(кол-цию) с презентерами карточек и удаляет карточку и попап с методом destroy, который мы создали в film-presenter, но элементы еще есть, просто пустые
     this.#filmPresentersList.forEach((presenter) => presenter.destroy());
     // Очищает мапу, удаляет все элементы, она становится пустая
@@ -208,7 +208,7 @@ export default class FilmsBoardPresenter {
     remove(this.#loadingComponent);
 
     // Если нужно сбросить ко-во карточек и опять 5
-    if(resetRenderedCardCount) {
+    if (resetRenderedCardCount) {
       this.#renderedCardCount = CARD_COUNT_PER_STEP;
     }
 

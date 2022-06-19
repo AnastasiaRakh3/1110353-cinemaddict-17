@@ -11,7 +11,7 @@ export default class CommentsApiService extends ApiService {
 
   get comments() {
     // По умолчанию GET запрос
-    return this._load({url: `comments/${this.#cardId}`})
+    return this._load({ url: `comments/${this.#cardId}` })
       .then(ApiService.parseResponse);
   }
 
@@ -22,7 +22,7 @@ export default class CommentsApiService extends ApiService {
       url: `comments/${this.#cardId}`,
       method: Method.POST,
       body: JSON.stringify(newComment), // JSON.stringify преобразует карточку в строку JSON
-      headers: new Headers({'Content-Type': 'application/json'}), //Определяет тип содерж-го
+      headers: new Headers({ 'Content-Type': 'application/json' }), //Определяет тип содерж-го
     });
 
     // Принял ответ после отправки, переделал в json формат
