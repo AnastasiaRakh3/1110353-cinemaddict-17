@@ -1,5 +1,6 @@
-import FilmCardView from '../view/film-card-view.js';
-import PopupView from '../view/popup-view.js';
+import FilmCardView from '../view/films-section/film-card-view.js';
+import PopupView from '../view/popup/popup-view.js';
+import PopupFilmControls from '../view/popup/popup-film-controls-view.js';
 import CommentsModel from '../model/comments-model.js';
 import CommentsPresenter from './comments-presenter.js';
 import CommentsApiService from '../api/comments-api-service.js';
@@ -24,6 +25,7 @@ export default class FilmPresenter {
   #mode = Mode.DEFAULT;
   #cardComponent = null;
   #popupComponent = null;
+  #popupFilmControlsComponent = null;
   #commentsPresenter = null;
   #commentsModel = null;
   #bodyComponent = bodyElement;
@@ -39,9 +41,14 @@ export default class FilmPresenter {
 
     const prevCardComponent = this.#cardComponent;
     const prevPopupComponent = this.#popupComponent;
+    const prevPopupFilmControlsComponent = this.#popupFilmControlsComponent;
 
     this.#cardComponent = new FilmCardView(card);
     this.#popupComponent = new PopupView(card);
+    this.#popupFilmControlsComponent = new PopupFilmControls(card);
+
+    const filmControlsContainer = this.#popupComponent.element.querySelector('.film-details__top-container');
+    render(this.#popupFilmControlsComponent, filmControlsContainer);
 
     this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION, this.#card.id));
     this.#commentsModel.init();
@@ -65,11 +72,20 @@ export default class FilmPresenter {
 
     remove(prevCardComponent);
     remove(prevPopupComponent);
+    remove(prevPopupFilmControlsComponent);
   };
 
   destroy = () => {
     remove(this.#cardComponent);
     remove(this.#popupComponent);
+  };
+
+  shakeFilm = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#cardComponent.shake();
+    } else {
+      this.#popupFilmControlsComponent.shake();
+    }
   };
 
   // Метод закрывает открытый попап
@@ -80,9 +96,8 @@ export default class FilmPresenter {
   };
 
   #openPopup = () => {
-    // ?? Где этот метод?
     this.#changeMode();
-    this.#bodyComponent.appendChild(this.#popupComponent.element);
+    render(this.#popupComponent, this.#bodyComponent);
     bodyElement.classList.add('hide-overflow');
     this.#commentsPresenter.init();
     document.addEventListener('keydown', this.#onEscKeyDown);
@@ -90,7 +105,7 @@ export default class FilmPresenter {
   };
 
   #closePopup = () => {
-    this.#bodyComponent.removeChild(this.#popupComponent.element);
+    remove(this.#popupComponent);
     bodyElement.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.DEFAULT;
@@ -157,8 +172,8 @@ export default class FilmPresenter {
     this.#cardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
     this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
-    this.#popupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    this.#popupComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
-    this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#popupFilmControlsComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#popupFilmControlsComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#popupFilmControlsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
   };
 }

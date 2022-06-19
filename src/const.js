@@ -39,9 +39,9 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-const Extra = {
-  TOP_RATED: 'Top rated',
-  MOST_COMMENTED: 'Most commented',
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
 };
 
-export { UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType, Extra };
+export { UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType, TimeLimit };

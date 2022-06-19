@@ -1,8 +1,9 @@
-import PopupCommentsListView from '../view/popup-comments-list-view.js';
-import PopupNewCommentView from '../view/popup-new-comment.js';
+import PopupCommentsListView from '../view/popup/popup-comments-list-view.js';
+import PopupNewCommentView from '../view/popup/popup-new-comment.js';
 import CommentPresenter from './comment-presenter.js';
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType, TimeLimit } from '../const.js';
 import { remove, render, RenderPosition } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class CommentsPresenter {
   #commentsModel = null;
@@ -10,6 +11,7 @@ export default class CommentsPresenter {
 
   #popupCommentsListComponent = null;
   #popupNewCommentComponent = null;
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
   #commentPresenterList = new Map();
 
   constructor(commentsModel, commentsContainer) {
@@ -32,22 +34,35 @@ export default class CommentsPresenter {
     render(this.#popupCommentsListComponent, this.#commentsContainer, RenderPosition.AFTEREND);
     render(this.#popupNewCommentComponent, this.#popupCommentsListComponent.element, RenderPosition.BEFOREEND);
     this.#renderComments();
+
     this.#popupCommentsListComponent.setDeleteButtonClickHandler(this.#deleteComment);
     this.#popupNewCommentComponent.setAddCommentKeyDownHandler(this.#addComment);
 
     remove(prevPopupCommentsListComponent);
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     // actionType - добавить или удалить комментарий
     switch (actionType) {
       case UserAction.DELETE_COMMENT:
-        this.#commentsModel.deleteComment(updateType, update);
+        this.#commentPresenterList.get(update).setDeletingMode();
+        try {
+          await this.#commentsModel.deleteComment(updateType, update);
+        } catch {
+          this.#commentPresenterList.get(update).setDefaultMode();
+        }
         break;
       case UserAction.ADD_COMMENT:
-        this.#commentsModel.addComment(updateType, update);
+        try {
+          await this.#commentsModel.addComment(updateType, update);
+        } catch {
+          this.#shakeNewComment();
+        }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelChange = (updateType, update) => {
@@ -81,5 +96,9 @@ export default class CommentsPresenter {
 
   #addComment = (newComment) => {
     this.#handleViewAction(UserAction.ADD_COMMENT, UpdateType.MAJOR, newComment);
+  };
+
+  #shakeNewComment = () => {
+    this.#popupNewCommentComponent.shake();
   };
 }

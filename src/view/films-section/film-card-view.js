@@ -1,6 +1,6 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeCardFilmDate, humanizeFilmRunTime } from '../utils/datetime.js';
-import { checkTotalRating, checkDescriptionLength } from '../utils/other.js';
+import AbstractView from '../../framework/view/abstract-view.js';
+import { humanizeCardFilmDate, humanizeFilmRunTime } from '../../utils/datetime.js';
+import { checkTotalRating, checkDescriptionLength } from '../../utils/other.js';
 
 const createFilmCardTemplate = (filmCard) => {
   const { comments, filmInfo: { title, totalRating, poster, release: { date }, runtime, genre, description }, userDetails: { watchlist, alreadyWatched, favorite } } = filmCard;

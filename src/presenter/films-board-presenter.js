@@ -1,17 +1,17 @@
-import FilmsBlockView from '../view/films-block-view.js';
-import FilmsListView from '../view/films-list-view.js';
-import FilmsListContainerView from '../view/films-list-container-view.js';
-import LoadMoreButtonView from '../view/loadmore-button-view.js';
-import NoFilmsListTitleView from '../view/no-films-list-title-view.js';
-import FilmsListTitleView from '../view/films-list-title-view.js';
+import FilmsBlockView from '../view/films-section/films-block-view';
+import FilmsListView from '../view/films-section/films-list-view.js';
+import FilmsListContainerView from '../view/films-section/films-list-container-view.js';
+import LoadMoreButtonView from '../view/films-section/loadmore-button-view.js';
+import NoFilmsListTitleView from '../view/films-section/no-films-list-title-view.js';
+import FilmsListTitleView from '../view/films-section/films-list-title-view.js';
 import LoadingView from '../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
 import SortPresenter from './sort-presenter.js';
-import FilmsExtraPresenter from './films-extra-presenter.js';
-import { SortType, UpdateType, FilterType, Extra } from '../const.js';
+import { SortType, UpdateType, FilterType, TimeLimit } from '../const.js';
 import { sortCardsByDate, sortCardsByRating } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
 import { render, RenderPosition, remove } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -27,7 +27,6 @@ export default class FilmsBoardPresenter {
 
   #noFilmsListTitleComponent = null;
   #sortPresenter = null;
-  // #filmsListExtraPresenter = null;
   #filmsBlockComponent = new FilmsBlockView();
   #filmsListComponent = new FilmsListView();
   #filmsListTitleComponent = new FilmsListTitleView();
@@ -36,6 +35,7 @@ export default class FilmsBoardPresenter {
   #loadingComponent = new LoadingView();
   #filmPresentersList = new Map();
   #filmsExtraPresenterList = new Map();
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   constructor(filmsBlockContainer, cardsModel, filtersModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
@@ -89,12 +89,19 @@ export default class FilmsBoardPresenter {
   };
 
   // Метод, вызывающий обновление модели
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     console.log(actionType, updateType, update);
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
-    this.#cardsModel.updateCard(updateType, update);
+    try {
+      await this.#cardsModel.updateCard(updateType, update);
+    } catch {
+      this.#filmPresentersList.get(update.id).shakeFilm();
+    }
+
+    this.#uiBlocker.unblock();
   };
 
   // Метод, который добавим в наблюдатель
@@ -191,11 +198,6 @@ export default class FilmsBoardPresenter {
     render(this.#filmsListTitleComponent, this.#filmsListComponent.element, RenderPosition.AFTERBEGIN);
   };
 
-  #renderExtraSection = () => {
-    [Extra.TOP_RATED, Extra.MOST_COMMENTED].forEach((extraMode) => this.#filmsExtraPresenterList.set(extraMode, new FilmsExtraPresenter(this.#filmsListComponent.element, extraMode, this.#cardsModel)));
-    this.#filmsExtraPresenterList.forEach((presenter) => presenter.init());
-  };
-
   // То же самое, что и {нет ключа, нет ключа}, но нужна такая запись, чтобы учесть, что эти ключи могут быть
   #clearFilmsSection = ({ resetRenderedCardCount = false, resetSortType = false } = {}) => {
     // Обходит карту(кол-цию) с презентерами карточек и удаляет карточку и попап с методом destroy, который мы создали в film-presenter, но элементы еще есть, просто пустые
@@ -230,7 +232,5 @@ export default class FilmsBoardPresenter {
     // Создаем презентер вьюхи сортировки, куда отрендерить и что делать при клике
     this.#sortPresenter = new SortPresenter(this.#filmsBlockComponent.element, this.#handleSortTypeChange);
     this.#sortPresenter.init(this.#currentSortType);
-
-    // this.#renderExtraSection();
   };
 }

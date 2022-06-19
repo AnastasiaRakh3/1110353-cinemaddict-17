@@ -5,15 +5,13 @@ import { render, remove, replace } from '../framework/render';
 export default class UserPresenter {
   #renderingPlace = null;
   #cardsModel = null;
-  #userModel = null;
 
   #userComponent = null;
   #currentUserStatus = null;
 
-  constructor(renderingPlace, cardsModel, userModel) {
+  constructor(renderingPlace, cardsModel) {
     this.#renderingPlace = renderingPlace;
     this.#cardsModel = cardsModel;
-    this.#userModel = userModel;
 
     this.#cardsModel.addObserver(this.#handleUserStatusChange);
   }

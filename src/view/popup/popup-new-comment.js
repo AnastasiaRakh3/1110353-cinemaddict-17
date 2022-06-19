@@ -1,5 +1,5 @@
-import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { Emotion } from '../const.js';
+import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
+import { Emotion } from '../../const.js';
 import he from 'he';
 
 // Чтобы гарантировать порядок эмоджи

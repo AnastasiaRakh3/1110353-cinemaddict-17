@@ -6,7 +6,7 @@ import { render, replace, remove, RenderPosition } from '../framework/render.js'
 export default class SortPresenter {
   #renderingPlace = null;
   #changeData = null;
-  // ??
+
   #currentSortType = SortType.DEFAULT;
   #sortComponent = null;
 
@@ -18,7 +18,7 @@ export default class SortPresenter {
   init = (currentSortType) => {
     this.#currentSortType = currentSortType;
     const prevSortComponent = this.#sortComponent;
-    this.#sortComponent = new SortView(currentSortType);
+    this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortClick);
 
     if (prevSortComponent === null) {
