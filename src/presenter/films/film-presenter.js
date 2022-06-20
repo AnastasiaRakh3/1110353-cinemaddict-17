@@ -30,10 +30,16 @@ export default class FilmPresenter {
   #commentsModel = null;
   #bodyComponent = bodyElement;
 
-  constructor(filmListContainer, changeData, changeMode) {
+  constructor(filmListContainer, changeData, changeMode, card) {
     this.#filmListContainer = filmListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+    this.#card = card;
+
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION, this.#card.id));
+    this.#commentsModel.init();
+
+    this.#commentsModel.addObserver(this.#handleCommentsModelChange);
   }
 
   init = (card) => {
@@ -41,19 +47,12 @@ export default class FilmPresenter {
 
     const prevCardComponent = this.#cardComponent;
     const prevPopupComponent = this.#popupComponent;
-    const prevPopupFilmControlsComponent = this.#popupFilmControlsComponent;
 
     this.#cardComponent = new FilmCardView(card);
     this.#popupComponent = new PopupView(card);
     this.#popupFilmControlsComponent = new PopupFilmControls(card);
 
-    const filmControlsContainer = this.#popupComponent.element.querySelector('.film-details__top-container');
-    render(this.#popupFilmControlsComponent, filmControlsContainer);
-
-    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION, this.#card.id));
-    this.#commentsModel.init();
-    this.#commentsPresenter = new CommentsPresenter(this.#commentsModel, this.#popupComponent.element.querySelector('.film-details__top-container'));
-
+    this.#renderPopupFilmControls();
     this.#setAllHandlers();
 
     if (prevCardComponent === null || prevPopupComponent === null) {
@@ -63,18 +62,28 @@ export default class FilmPresenter {
 
     if (this.#mode === Mode.WATCHING) {
       replace(this.#popupComponent, prevPopupComponent);
-      this.#commentsPresenter.init();
+      this.#renderComments();
+      this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
     }
 
     replace(this.#cardComponent, prevCardComponent);
     remove(prevCardComponent);
     remove(prevPopupComponent);
-    remove(prevPopupFilmControlsComponent);
   };
 
   destroy = () => {
     remove(this.#cardComponent);
     remove(this.#popupComponent);
+  };
+
+  #renderComments = () => {
+    this.#commentsPresenter = new CommentsPresenter(this.#commentsModel, this.#popupComponent.element.querySelector('.film-details__top-container'));
+    this.#commentsPresenter.init();
+  };
+
+  #renderPopupFilmControls = () => {
+    const filmControlsContainer = this.#popupComponent.element.querySelector('.film-details__top-container');
+    render(this.#popupFilmControlsComponent, filmControlsContainer);
   };
 
   shakeFilm = () => {
@@ -94,8 +103,10 @@ export default class FilmPresenter {
   #openPopup = () => {
     this.#changeMode();
     render(this.#popupComponent, this.#bodyComponent);
+    this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
     bodyElement.classList.add('hide-overflow');
-    this.#commentsPresenter.init();
+    this.#renderComments();
+    this.#renderPopupFilmControls();
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.WATCHING;
   };
@@ -115,9 +126,20 @@ export default class FilmPresenter {
     }
   };
 
+  #handleCommentsModelChange = (updateType) => {
+    switch (updateType) {
+      case UpdateType.MAJOR:
+        this.init({
+          ...this.#card,
+          comments: this.#commentsModel.filmComments.map((comment) => comment.id)
+        });
+        break;
+    }
+  };
+
   #handleWatchlistClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {
         ...this.#card,
         userDetails: {
@@ -129,7 +151,7 @@ export default class FilmPresenter {
 
   #handleAlreadyWatchedClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {
         ...this.#card,
         userDetails: {
@@ -142,7 +164,7 @@ export default class FilmPresenter {
 
   #handleFavoriteClick = () => {
     this.#changeData(UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {
         ...this.#card,
         userDetails: {
@@ -166,7 +188,6 @@ export default class FilmPresenter {
     this.#cardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#cardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
-    this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
     this.#popupFilmControlsComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
     this.#popupFilmControlsComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#popupFilmControlsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);

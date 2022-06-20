@@ -31,7 +31,6 @@ export default class CommentsApiService extends ApiService {
       url: `comments/${commentId}`,
       method: Method.DELETE,
     });
-
     return response;
   };
 

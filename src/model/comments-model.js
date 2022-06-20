@@ -21,7 +21,7 @@ export default class CommentsModel extends Observable {
       this.#comments = [];
     }
 
-    this._notify(UpdateType.MAJOR);
+    this._notify(UpdateType.INIT);
   };
 
   addComment = async (updateType, update) => {
@@ -33,8 +33,8 @@ export default class CommentsModel extends Observable {
         ...this.#comments,
         newComment,
       ];
-      this._notify(updateType, newComment);
-    } catch (err) {
+      this._notify(updateType, card);
+    } catch {
       throw new Error('Can\'t add comment');
     }
   };
@@ -53,7 +53,7 @@ export default class CommentsModel extends Observable {
         ...this.#comments.slice(index + 1),
       ];
       this._notify(updateType);
-    } catch (err) {
+    } catch {
       throw new Error('Can\'t delete comment');
     }
   };

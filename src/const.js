@@ -39,9 +39,4 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
-
-export { UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType, TimeLimit };
+export { UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType };
