@@ -1,18 +1,16 @@
 import SortView from '../view/sort-view.js';
-import {SortType} from '../const.js';
+import { SortType } from '../const.js';
 import { render, replace, remove, RenderPosition } from '../framework/render.js';
 
 
 export default class SortPresenter {
-
   #renderingPlace = null;
-
-  // ??
-  #currentSortType = SortType.DEFAULT;
-  #sortComponent = null;
   #changeData = null;
 
-  constructor (renderingPlace, changeData) {
+  #currentSortType = SortType.DEFAULT;
+  #sortComponent = null;
+
+  constructor(renderingPlace, changeData) {
     this.#renderingPlace = renderingPlace;
     this.#changeData = changeData;
   }
@@ -20,10 +18,10 @@ export default class SortPresenter {
   init = (currentSortType) => {
     this.#currentSortType = currentSortType;
     const prevSortComponent = this.#sortComponent;
-    this.#sortComponent = new SortView(currentSortType);
+    this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortClick);
 
-    if(prevSortComponent === null) {
+    if (prevSortComponent === null) {
       render(this.#sortComponent, this.#renderingPlace, RenderPosition.BEFOREBEGIN);
       return;
     }

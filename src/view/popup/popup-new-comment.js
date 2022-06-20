@@ -1,15 +1,14 @@
-import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { Emotion } from '../const.js';
+import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
+import { Emotion } from '../../const.js';
 import he from 'he';
 
-// Чтобы гарантировать порядок эмоджи
 const EmojiOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY];
 
 const createPopupNewCommentTemplate = (state) => {
   const getSelectedEmojiPicture = () => state.localEmotion !== null ? `<img src="images/emoji/${state.localEmotion}.png" width="55" height="55" alt="emoji-${state.localEmotion}">` : '';
   const checkIsEmojiSelected = (emoji) => emoji === state.localEmotion ? 'checked' : '';
 
-  const createListElement = (emoji) =>  `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)}>
+  const createListElement = (emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)}>
   <label class="film-details__emoji-label" for="emoji-${emoji}">
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`;
@@ -27,12 +26,10 @@ const createPopupNewCommentTemplate = (state) => {
 };
 
 export default class PopupNewCommentView extends AbstractStatefulView {
-
-  constructor (comment) {
+  constructor(comment) {
     super();
-    // В нем будет объект с новыми значениями ключей
-    this._state = PopupNewCommentView.parseCommentToState(comment);
 
+    this._state = PopupNewCommentView.parseCommentToState(comment);
     this.#setInnerHandlers();
   }
 
@@ -42,13 +39,12 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   #emojiChooseHandler = (evt) => {
     const targetInput = evt.target;
-    // Обновляем объект новыми свойствами и перерисовываем элемент
     this.updateElement({
       localEmotion: targetInput.value,
     });
   };
 
-  #commentSendHandler = (evt) => {
+  #commentAddHandler = (evt) => {
     if (evt.keyCode === 13 && evt.ctrlKey) {
       this._callback.commentAddKeyDown(PopupNewCommentView.parseStateToComment(this._state));
     }
@@ -60,7 +56,6 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   #commentInputHandler = (evt) => {
     const targetInput = evt.target;
-    // Добавляем в объект новые свойства
     this._setState({
       localComment: targetInput.value,
     });
@@ -68,23 +63,18 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   #setInnerHandlers = () => {
     this.element.querySelector('.film-details__emoji-list').addEventListener('input', this.#emojiChooseHandler);
-    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentSendHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddHandler);
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
   };
 
-  // Добавляем в объект новые свойства, значение которых потом при parseStateToComment присвоим другим ключам: comment и emotion
-  static parseCommentToState = (comment) => ({...comment,
+  static parseCommentToState = (comment) => ({
+    ...comment,
     localComment: '',
     localEmotion: null,
   });
 
-  // Присвоим нужным ключам (comment и emotion), значение свойств тех ключей, с которыми работали (localComment, localEmotion)
-  // Если localComment, localEmotion пустые, то по умол. передаем пустую строку и дефолтный смайл
-  // Удаляем их: localComment, localEmotion
-  // Возвращаем объект с возможно изменеными значениями свойств
-
   static parseStateToComment = (state) => {
-    const commentData = {...state};
+    const commentData = { ...state };
 
     commentData.comment = commentData.localComment;
 

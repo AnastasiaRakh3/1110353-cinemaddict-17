@@ -1,4 +1,4 @@
-import {FilterType} from '../const.js';
+import { FilterType } from '../const.js';
 
 const filter = {
   [FilterType.ALL]: (cards) => cards,
@@ -7,4 +7,4 @@ const filter = {
   [FilterType.FAVORITES]: (cards) => cards.filter((card) => card.userDetails.favorite),
 };
 
-export {filter};
+export { filter };

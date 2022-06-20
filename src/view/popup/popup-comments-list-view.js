@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractView from '../../framework/view/abstract-view';
 
 const createPopupCommentsListTemplate = (commentsCount) => `<div class="film-details__bottom-container">
   <section class="film-details__comments-wrap">
@@ -28,7 +28,7 @@ export default class PopupCommentsListView extends AbstractView {
   };
 
   #commentDeleteClickHandler = (evt) => {
-    evt.stopPropagation();
+    evt.preventDefault();
     this._callback.commentDeleteClick(evt.target.dataset.commentId);
   };
 }
