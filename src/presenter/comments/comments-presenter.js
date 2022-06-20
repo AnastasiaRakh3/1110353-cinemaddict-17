@@ -1,9 +1,9 @@
 import PopupCommentsListView from '../../view/popup/popup-comments-list-view.js';
 import PopupNewCommentView from '../../view/popup/popup-new-comment.js';
 import CommentPresenter from './comment-presenter.js';
-import { UserAction, UpdateType, TimeLimit } from '../../const.js';
+import { UserAction, UpdateType } from '../../const.js';
 import { remove, render, RenderPosition } from '../../framework/render.js';
-import UiBlocker from '../../framework/ui-blocker/ui-blocker.js';
+import { uiBlockerInstance } from '../../utils/ui-blocker.js';
 
 export default class CommentsPresenter {
   #commentsModel = null;
@@ -11,14 +11,12 @@ export default class CommentsPresenter {
 
   #popupCommentsListComponent = null;
   #popupNewCommentComponent = null;
-  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
+  #uiBlocker = uiBlockerInstance;
   #commentPresenterList = new Map();
 
   constructor(commentsModel, commentsContainer) {
     this.#commentsModel = commentsModel;
     this.#commentsContainer = commentsContainer;
-
-    this.#commentsModel.addObserver(this.#handleModelChange);
   }
 
   get commentsList() {
@@ -65,14 +63,6 @@ export default class CommentsPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handleModelChange = (updateType) => {
-    switch (updateType) {
-      case UpdateType.MAJOR:
-        this.#clearComments();
-        this.init();
-    }
-  };
-
   #renderComments = () => {
     const commentsContainer = this.#popupCommentsListComponent.element.querySelector('.film-details__comments-list');
     for (let i = 0; i < this.commentsList.length; i++) {
@@ -81,11 +71,6 @@ export default class CommentsPresenter {
       commentPresenter.init(currentComment);
       this.#commentPresenterList.set(currentComment.id, commentPresenter);
     }
-  };
-
-  #clearComments = () => {
-    this.#commentPresenterList.forEach((presenter) => presenter.destroy());
-    this.#commentPresenterList.clear();
   };
 
   #deleteComment = (commentId) => {

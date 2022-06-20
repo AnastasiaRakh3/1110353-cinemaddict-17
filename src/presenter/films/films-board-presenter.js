@@ -7,11 +7,11 @@ import FilmsListTitleView from '../../view/films-section/films-list-title-view.j
 import LoadingView from '../../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
 import SortPresenter from '../sort-presenter.js';
-import { SortType, UpdateType, FilterType, TimeLimit } from '../../const.js';
+import { SortType, UpdateType, FilterType } from '../../const.js';
 import { sortCardsByDate, sortCardsByRating } from '../../utils/sort.js';
 import { filter } from '../../utils/filter.js';
 import { render, RenderPosition, remove } from '../../framework/render.js';
-import UiBlocker from '../../framework/ui-blocker/ui-blocker.js';
+import { uiBlockerInstance } from '../../utils/ui-blocker';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -34,8 +34,7 @@ export default class FilmsBoardPresenter {
   #loadMoreButtonComponent = new LoadMoreButtonView();
   #loadingComponent = new LoadingView();
   #filmPresentersList = new Map();
-  #filmsExtraPresenterList = new Map();
-  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
+  #uiBlocker = uiBlockerInstance;
 
   constructor(filmsBlockContainer, cardsModel, filtersModel) {
     this.#filmsBlockContainer = filmsBlockContainer;
@@ -80,7 +79,7 @@ export default class FilmsBoardPresenter {
     this.#filmPresentersList.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = async (actionType, updateType, update) => {
+  #handleViewAction = async (_, updateType, update) => {
     this.#uiBlocker.block();
 
     try {
@@ -95,13 +94,14 @@ export default class FilmsBoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
+
+        break;
+      case UpdateType.MINOR:
         this.#filmPresentersList.get(data.id).init(data);
         if (this.#filterType !== FilterType.ALL) {
           this.#clearFilmsSection();
           this.#renderFilmsSection();
         }
-        break;
-      case UpdateType.MINOR:
         break;
       case UpdateType.MAJOR:
         this.#clearFilmsSection({ resetRenderedCardCount: true, resetSortType: true });
@@ -128,7 +128,7 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilm = (card) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent.element, this.#handleViewAction, this.#handleModeChange);
+    const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent.element, this.#handleViewAction, this.#handleModeChange, card);
     filmPresenter.init(card);
     this.#filmPresentersList.set(card.id, filmPresenter);
   };
