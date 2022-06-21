@@ -7,7 +7,7 @@ import FilmsListTitleView from '../../view/films-section/films-list-title-view.j
 import LoadingView from '../../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
 import SortPresenter from '../sort-presenter.js';
-import { SortType, UpdateType, FilterType } from '../../const.js';
+import { SortType, UpdateType, FilterType, UserAction } from '../../const.js';
 import { sortCardsByDate, sortCardsByRating } from '../../utils/sort.js';
 import { filter } from '../../utils/filter.js';
 import { render, RenderPosition, remove } from '../../framework/render.js';
@@ -41,8 +41,8 @@ export default class FilmsBoardPresenter {
     this.#cardsModel = cardsModel;
     this.#filtersModel = filtersModel;
 
-    this.#cardsModel.addObserver(this.#handleModelEvent);
-    this.#filtersModel.addObserver(this.#handleModelEvent);
+    this.#cardsModel.addObserver(this.#handleModelChange);
+    this.#filtersModel.addObserver(this.#handleModelChange);
   }
 
   get filmCards() {
@@ -56,6 +56,7 @@ export default class FilmsBoardPresenter {
       case SortType.RATING:
         return filteredCards.sort(sortCardsByRating);
     }
+
     return filteredCards;
   }
 
@@ -79,22 +80,26 @@ export default class FilmsBoardPresenter {
     this.#filmPresentersList.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = async (_, updateType, update) => {
-    this.#uiBlocker.block();
-
-    try {
-      await this.#cardsModel.updateCard(updateType, update);
-    } catch {
-      this.#filmPresentersList.get(update.id).shakeFilm();
+  #handleViewAction = async (userAction, updateType, update) => {
+    switch (userAction) {
+      case UserAction.ADD_COMMENT:
+        this.#cardsModel.updateCommentsInCard(updateType, update);
+        break;
+      default:
+        this.#uiBlocker.block();
+        try {
+          await this.#cardsModel.updateCard(updateType, update);
+        } catch {
+          this.#filmPresentersList.get(update.id).shakeFilm();
+        }
+        this.#uiBlocker.unblock();
     }
-
-    this.#uiBlocker.unblock();
   };
 
-  #handleModelEvent = (updateType, data) => {
+  #handleModelChange = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-
+        this.#filmPresentersList.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#filmPresentersList.get(data.id).init(data);

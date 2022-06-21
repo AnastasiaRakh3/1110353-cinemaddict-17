@@ -37,6 +37,14 @@ export default class PopupNewCommentView extends AbstractStatefulView {
     return createPopupNewCommentTemplate(this._state);
   }
 
+  setAddCommentKeyDownHandler = (callback) => {
+    this._callback.commentAddKeyDown = callback;
+  };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+  };
+
   #emojiChooseHandler = (evt) => {
     const targetInput = evt.target;
     this.updateElement({
@@ -48,10 +56,6 @@ export default class PopupNewCommentView extends AbstractStatefulView {
     if (evt.keyCode === 13 && evt.ctrlKey) {
       this._callback.commentAddKeyDown(PopupNewCommentView.parseStateToComment(this._state));
     }
-  };
-
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
   };
 
   #commentInputHandler = (evt) => {
@@ -87,9 +91,5 @@ export default class PopupNewCommentView extends AbstractStatefulView {
     delete commentData.localComment;
     delete commentData.localEmotion;
     return commentData;
-  };
-
-  setAddCommentKeyDownHandler = (callback) => {
-    this._callback.commentAddKeyDown = callback;
   };
 }

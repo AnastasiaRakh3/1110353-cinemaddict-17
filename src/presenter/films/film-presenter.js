@@ -37,7 +37,6 @@ export default class FilmPresenter {
     this.#card = card;
 
     this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION, this.#card.id));
-    this.#commentsModel.init();
 
     this.#commentsModel.addObserver(this.#handleCommentsModelChange);
   }
@@ -76,14 +75,10 @@ export default class FilmPresenter {
     remove(this.#popupComponent);
   };
 
-  #renderComments = () => {
-    this.#commentsPresenter = new CommentsPresenter(this.#commentsModel, this.#popupComponent.element.querySelector('.film-details__top-container'));
-    this.#commentsPresenter.init();
-  };
-
-  #renderPopupFilmControls = () => {
-    const filmControlsContainer = this.#popupComponent.element.querySelector('.film-details__top-container');
-    render(this.#popupFilmControlsComponent, filmControlsContainer);
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#closePopup();
+    }
   };
 
   shakeFilm = () => {
@@ -94,46 +89,54 @@ export default class FilmPresenter {
     }
   };
 
-  resetView = () => {
-    if (this.#mode !== Mode.DEFAULT) {
-      this.#closePopup();
+  #handleCommentsModelChange = (updateType) => {
+    switch (updateType) {
+      case UpdateType.MAJOR:
+        this.#changeData(UserAction.ADD_COMMENT,
+          UpdateType.PATCH, {
+            ...this.#card,
+            comments: this.#commentsModel.filmComments.map((comment) => comment.id)
+          });
+        break;
+      case UpdateType.INIT:
+        this.#renderComments();
+        break;
     }
+  };
+
+  #renderComments = () => {
+    this.#commentsPresenter = new CommentsPresenter(this.#commentsModel, this.#popupComponent.element.querySelector('.film-details__top-container'));
+    this.#commentsPresenter.init();
+  };
+
+  #renderPopupFilmControls = () => {
+    const filmControlsContainerElement = this.#popupComponent.element.querySelector('.film-details__top-container');
+    render(this.#popupFilmControlsComponent, filmControlsContainerElement);
   };
 
   #openPopup = () => {
     this.#changeMode();
+    this.#commentsModel.init();
     render(this.#popupComponent, this.#bodyComponent);
     this.#popupComponent.setPopupCloseClickHandler(this.#handlePopupCloseClick);
     bodyElement.classList.add('hide-overflow');
-    this.#renderComments();
     this.#renderPopupFilmControls();
-    document.addEventListener('keydown', this.#onEscKeyDown);
+    document.addEventListener('keydown', this.#popupCloseEscKeyDownHandler);
     this.#mode = Mode.WATCHING;
   };
 
   #closePopup = () => {
     remove(this.#popupComponent);
     bodyElement.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this.#onEscKeyDown);
+    document.removeEventListener('keydown', this.#popupCloseEscKeyDownHandler);
     this.#mode = Mode.DEFAULT;
   };
 
-  #onEscKeyDown = (evt) => {
+  #popupCloseEscKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#closePopup();
-      document.removeEventListener('keydown', this.#onEscKeyDown);
-    }
-  };
-
-  #handleCommentsModelChange = (updateType) => {
-    switch (updateType) {
-      case UpdateType.MAJOR:
-        this.init({
-          ...this.#card,
-          comments: this.#commentsModel.filmComments.map((comment) => comment.id)
-        });
-        break;
+      document.removeEventListener('keydown', this.#popupCloseEscKeyDownHandler);
     }
   };
 

@@ -2,7 +2,6 @@ import ApiService from '../framework/api-service';
 import { Method } from '../server-config';
 
 export default class CardsApiService extends ApiService {
-
   get cards() {
     return this._load({ url: 'movies' })
       .then(ApiService.parseResponse);

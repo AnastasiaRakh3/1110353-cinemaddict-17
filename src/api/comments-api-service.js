@@ -33,6 +33,4 @@ export default class CommentsApiService extends ApiService {
     });
     return response;
   };
-
-
 }

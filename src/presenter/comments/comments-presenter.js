@@ -64,12 +64,12 @@ export default class CommentsPresenter {
   };
 
   #renderComments = () => {
-    const commentsContainer = this.#popupCommentsListComponent.element.querySelector('.film-details__comments-list');
-    for (let i = 0; i < this.commentsList.length; i++) {
-      const currentComment = this.commentsList[i];
-      const commentPresenter = new CommentPresenter(commentsContainer);
-      commentPresenter.init(currentComment);
-      this.#commentPresenterList.set(currentComment.id, commentPresenter);
+    const commentsContainerElement = this.#popupCommentsListComponent.element.querySelector('.film-details__comments-list');
+
+    for (const comment of this.commentsList) {
+      const commentPresenter = new CommentPresenter(commentsContainerElement);
+      commentPresenter.init(comment);
+      this.#commentPresenterList.set(comment.id, commentPresenter);
     }
   };
 

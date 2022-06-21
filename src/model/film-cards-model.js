@@ -11,7 +11,7 @@ export default class FilmCardsModel extends Observable {
   }
 
   get filmCards() {
-    return this.#filmCards;
+    return [...this.#filmCards];
   }
 
   init = async () => {
@@ -23,6 +23,17 @@ export default class FilmCardsModel extends Observable {
     }
 
     this._notify(UpdateType.INIT);
+  };
+
+  updateCommentsInCard = (updateType, update) => {
+    const index = this.#filmCards.findIndex((card) => card.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting card');
+    }
+
+    this.filmCards[index].comments = update.comments;
+    this._notify(updateType, this.filmCards[index]);
   };
 
   updateCard = async (updateType, update) => {

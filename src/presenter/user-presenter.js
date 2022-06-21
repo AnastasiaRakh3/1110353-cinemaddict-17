@@ -18,6 +18,7 @@ export default class UserPresenter {
 
   get userStatus() {
     const watchedFilmsAmount = this.#cardsModel.filmCards.filter((card) => card.userDetails.alreadyWatched).length;
+
     if (watchedFilmsAmount >= 1 && watchedFilmsAmount <= 10) {
       return UserStatus.NOVICE;
     } else if (watchedFilmsAmount >= 11 && watchedFilmsAmount <= 20) {

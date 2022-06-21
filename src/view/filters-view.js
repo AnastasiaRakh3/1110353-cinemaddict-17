@@ -1,4 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { FilterType } from '../const.js';
 
 const createFiltersItemTemplate = (filter, currentFilterType) => {
   const { type, name, count } = filter;
@@ -11,7 +12,7 @@ const createFiltersItemTemplate = (filter, currentFilterType) => {
   };
 
   const showName = (cardName) => {
-    if (cardName === 'all') {
+    if (cardName === FilterType.ALL) {
       return 'All movies';
     }
     return makeFirstLetterUp(cardName);
