@@ -1,8 +1,8 @@
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
-import { Emotion } from '../../const.js';
+import { Emotion, ENTER_KEY } from '../../const.js';
 import he from 'he';
 
-const EmojiOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY];
+const EmojisOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY];
 
 const createPopupNewCommentTemplate = (state) => {
   const getSelectedEmojiPicture = () => state.localEmotion !== null ? `<img src="images/emoji/${state.localEmotion}.png" width="55" height="55" alt="emoji-${state.localEmotion}">` : '';
@@ -20,7 +20,7 @@ const createPopupNewCommentTemplate = (state) => {
     <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(state.localComment)}</textarea>
   </label>
   <div class="film-details__emoji-list">
-  ${EmojiOrder.map((emoji) => createListElement(emoji)).join('')}
+  ${EmojisOrder.map((emoji) => createListElement(emoji)).join('')}
   </div>
   </div>`;
 };
@@ -45,15 +45,15 @@ export default class PopupNewCommentView extends AbstractStatefulView {
     this.#setInnerHandlers();
   };
 
-  #emojiChooseHandler = (evt) => {
+  #emojiChooseClickHandler = (evt) => {
     const targetInput = evt.target;
     this.updateElement({
       localEmotion: targetInput.value,
     });
   };
 
-  #commentAddHandler = (evt) => {
-    if (evt.keyCode === 13 && evt.ctrlKey) {
+  #commentAddKeyDownHandler = (evt) => {
+    if (evt.keyCode === ENTER_KEY && evt.ctrlKey || evt.keyCode === ENTER_KEY && evt.metaKey) {
       this._callback.commentAddKeyDown(PopupNewCommentView.parseStateToComment(this._state));
     }
   };
@@ -66,8 +66,8 @@ export default class PopupNewCommentView extends AbstractStatefulView {
   };
 
   #setInnerHandlers = () => {
-    this.element.querySelector('.film-details__emoji-list').addEventListener('input', this.#emojiChooseHandler);
-    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddHandler);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('input', this.#emojiChooseClickHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentAddKeyDownHandler);
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
   };
 

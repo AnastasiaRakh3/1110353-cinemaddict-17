@@ -16,11 +16,11 @@ const createFilmCardTemplate = (filmCard) => {
     <p class="film-card__info">
       <span class="film-card__year">${humanizeCardFilmDate(date)}</span>
       <span class="film-card__duration">${humanizeFilmRunTime(runtime)}</span>
-      <span class="film-card__genre">${genre.join(', ')}</span>
+      <span class="film-card__genre">${genre[0]}</span>
     </p>
     <img src="${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${checkDescriptionLength(description)}</p>
-    <span class="film-card__comments">${comments.length}comments</span>
+    <span class="film-card__comments">${comments.length} comments</span>
   </a>
   <div class="film-card__controls">
     <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${inWatchListClassName}" type="button">Add to watchlist</button>

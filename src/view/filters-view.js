@@ -3,7 +3,7 @@ import { FilterType } from '../const.js';
 
 const createFiltersItemTemplate = (filter, currentFilterType) => {
   const { type, name, count } = filter;
-  const countInfo = `<span class="main-navigation__item-count">${count}</span>`;
+  const countInfo = `<span class="main-navigation__item-count" data-filter-type="${type}">${count}</span>`;
   const isChosenClass = type === currentFilterType ? 'main-navigation__item--active' : '';
 
   const makeFirstLetterUp = (str) => {
@@ -47,16 +47,11 @@ export default class FiltersView extends AbstractView {
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    this.element.addEventListener('click', this.#filterTypeChangeHandler);
+    this.element.addEventListener('click', this.#filterTypeChangeClickHandler);
   };
 
-  #filterTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'A') {
-      return;
-    }
-
+  #filterTypeChangeClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.dataset.filterType);
   };
-
 }

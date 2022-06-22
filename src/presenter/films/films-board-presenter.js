@@ -61,6 +61,11 @@ export default class FilmsBoardPresenter {
   }
 
   init = () => {
+    render(this.#filmsBlockComponent, this.#filmsBlockContainer);
+    render(this.#filmsListComponent, this.#filmsBlockComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+    this.#sortPresenter = new SortPresenter(this.#filmsBlockComponent.element, this.#handleSortTypeChange);
+
     this.#renderFilmsBoard();
   };
 
@@ -105,18 +110,17 @@ export default class FilmsBoardPresenter {
         this.#filmPresentersList.get(data.id).init(data);
         if (this.#filterType !== FilterType.ALL) {
           this.#clearFilmsSection();
-          this.#renderFilmsSection();
+          this.#renderFilmsBoard();
         }
         break;
       case UpdateType.MAJOR:
         this.#clearFilmsSection({ resetRenderedCardCount: true, resetSortType: true });
-        this.#renderFilmsSection();
-        this.#sortPresenter.init();
+        this.#renderFilmsBoard();
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#renderFilmsSection();
+        this.#renderFilmsBoard();
         break;
     }
   };
@@ -127,9 +131,16 @@ export default class FilmsBoardPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#sortPresenter.init(this.#currentSortType);
     this.#clearFilmsSection();
-    this.#renderFilmsSection();
+    this.#renderFilmsBoard();
+  };
+
+  #renderSort = () => {
+    if (this.filmCards.length) {
+      this.#sortPresenter.init(this.#currentSortType);
+    } else {
+      this.#sortPresenter.destroy();
+    }
   };
 
   #renderFilm = (card) => {
@@ -158,24 +169,19 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilmsSection = () => {
-    if (this.#isLoading) {
-      this.#renderLoading();
-      return;
-    }
-
     const cardCount = this.filmCards.length;
     const cardsToRender = this.filmCards.slice(0, this.#renderedCardCount);
-    this.#renderFilms(cardsToRender);
-
-    if (cardsToRender.length < cardCount) {
-      this.#renderLoadMoreButton();
-    }
 
     if (cardCount === 0) {
       this.#renderNoCards();
       return;
     }
 
+    if (cardsToRender.length < cardCount) {
+      this.#renderLoadMoreButton();
+    }
+
+    this.#renderFilms(cardsToRender);
     render(this.#filmsListTitleComponent, this.#filmsListComponent.element, RenderPosition.AFTERBEGIN);
   };
 
@@ -200,12 +206,12 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilmsBoard = () => {
-    render(this.#filmsBlockComponent, this.#filmsBlockContainer);
-    render(this.#filmsListComponent, this.#filmsBlockComponent.element, RenderPosition.AFTERBEGIN);
-    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
 
+    this.#renderSort();
     this.#renderFilmsSection();
-    this.#sortPresenter = new SortPresenter(this.#filmsBlockComponent.element, this.#handleSortTypeChange);
-    this.#sortPresenter.init(this.#currentSortType);
   };
 }

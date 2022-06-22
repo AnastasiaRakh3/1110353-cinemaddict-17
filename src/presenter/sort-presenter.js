@@ -16,8 +16,8 @@ export default class SortPresenter {
   }
 
   init = (currentSortType) => {
-    this.#currentSortType = currentSortType;
     const prevSortComponent = this.#sortComponent;
+    this.#currentSortType = currentSortType;
     this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortClick);
 
@@ -28,6 +28,11 @@ export default class SortPresenter {
 
     replace(this.#sortComponent, prevSortComponent);
     remove(prevSortComponent);
+  };
+
+  destroy = () => {
+    remove(this.#sortComponent);
+    this.#sortComponent = null;
   };
 
   #handleSortClick = (newSortType) => {

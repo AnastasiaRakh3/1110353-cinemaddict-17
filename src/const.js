@@ -39,4 +39,6 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export { UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType };
+const ENTER_KEY = 13;
+
+export { UserStatus, FilterType, SortType, Emotion, UserAction, UpdateType, ENTER_KEY };
