@@ -82,7 +82,6 @@ export default class FilmPresenter {
 
   removeCard = () => {
     remove(this.#cardComponent);
-    this.#cardComponent = null;
   };
 
   disableControls = () => {

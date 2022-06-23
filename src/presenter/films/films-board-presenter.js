@@ -83,6 +83,10 @@ export default class FilmsBoardPresenter {
   };
 
   #handleModeChange = (openedFilmId) => {
+    if (this.#openedFilmPresenter?.cardId !== openedFilmId && this.#openedFilmPresenter) {
+      this.#openedFilmPresenter.resetView();
+    }
+
     this.#openedFilmPresenter = this.#filmPresentersList.get(openedFilmId);
     this.#filmPresentersList.forEach((presenter) => presenter.resetView());
   };
@@ -98,10 +102,10 @@ export default class FilmsBoardPresenter {
           const currentFilmPresenter = update.id === this.#openedFilmPresenter?.cardId
             ? this.#openedFilmPresenter
             : this.#filmPresentersList.get(update.id);
-          // currentFilmPresenter.disableControls();
+          currentFilmPresenter.disableControls();
           await this.#cardsModel.updateCard(updateType, update);
-        } catch (err) {
-          console.log(err);
+          currentFilmPresenter.enableControls();
+        } catch {
           this.#filmPresentersList.get(update.id).shakeFilm();
         }
         this.#uiBlocker.unblock();
@@ -117,7 +121,6 @@ export default class FilmsBoardPresenter {
         const currentFilmPresenter = data.id === this.#openedFilmPresenter?.cardId
           ? this.#openedFilmPresenter
           : this.#filmPresentersList.get(data.id);
-        // currentFilmPresenter.enableControls();
         currentFilmPresenter.init(data);
         if (this.#filterType !== FilterType.ALL) {
           this.#clearFilmsSection();
