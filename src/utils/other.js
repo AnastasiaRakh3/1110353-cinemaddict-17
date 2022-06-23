@@ -1,8 +1,8 @@
 const ALLOWED_DESCRIPTION_LENGTH = 140;
 
-const checkTotalRating = (rating) => rating.toFixed(1);
+const formatTotalRating = (rating) => rating.toFixed(1);
 
-const checkDescriptionLength = (string) => {
+const formatDescription = (string) => {
   if (string.length > ALLOWED_DESCRIPTION_LENGTH) {
     return `${string.slice(0, ALLOWED_DESCRIPTION_LENGTH - 1)}...`;
   }
@@ -10,4 +10,6 @@ const checkDescriptionLength = (string) => {
   return string;
 };
 
-export { checkTotalRating, checkDescriptionLength };
+const getGenreTitle = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
+
+export { formatTotalRating, formatDescription, getGenreTitle };

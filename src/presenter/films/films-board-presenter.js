@@ -27,6 +27,7 @@ export default class FilmsBoardPresenter {
 
   #noFilmsListTitleComponent = null;
   #sortPresenter = null;
+  #openedFilmPresenter = null;
   #filmsBlockComponent = new FilmsBlockView();
   #filmsListComponent = new FilmsListView();
   #filmsListTitleComponent = new FilmsListTitleView();
@@ -81,7 +82,8 @@ export default class FilmsBoardPresenter {
     }
   };
 
-  #handleModeChange = () => {
+  #handleModeChange = (openedFilmId) => {
+    this.#openedFilmPresenter = this.#filmPresentersList.get(openedFilmId);
     this.#filmPresentersList.forEach((presenter) => presenter.resetView());
   };
 
@@ -107,7 +109,11 @@ export default class FilmsBoardPresenter {
         this.#filmPresentersList.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#filmPresentersList.get(data.id).init(data);
+        if (data.id === this.#openedFilmPresenter?.cardId) {
+          this.#openedFilmPresenter.init(data);
+        } else {
+          this.#filmPresentersList.get(data.id).init(data);
+        }
         if (this.#filterType !== FilterType.ALL) {
           this.#clearFilmsSection();
           this.#renderFilmsBoard();
@@ -186,7 +192,14 @@ export default class FilmsBoardPresenter {
   };
 
   #clearFilmsSection = ({ resetRenderedCardCount = false, resetSortType = false } = {}) => {
-    this.#filmPresentersList.forEach((presenter) => presenter.destroy());
+    this.#filmPresentersList.forEach((presenter) => {
+      if (presenter === this.#openedFilmPresenter) {
+        presenter.removeCard();
+        return;
+      }
+      presenter.destroy();
+    });
+
     this.#filmPresentersList.clear();
 
     remove(this.#loadMoreButtonComponent);

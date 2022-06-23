@@ -4,11 +4,13 @@ import he from 'he';
 
 const EmojisOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY];
 
-const createPopupNewCommentTemplate = (state) => {
+const createPopupNewCommentTemplate = (state, isDisabled) => {
+  const inDisabledState = isDisabled ? 'disabled' : '';
+
   const getSelectedEmojiPicture = () => state.localEmotion !== null ? `<img src="images/emoji/${state.localEmotion}.png" width="55" height="55" alt="emoji-${state.localEmotion}">` : '';
   const checkIsEmojiSelected = (emoji) => emoji === state.localEmotion ? 'checked' : '';
 
-  const createListElement = (emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)}>
+  const createListElement = (emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)} ${inDisabledState}>
   <label class="film-details__emoji-label" for="emoji-${emoji}">
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`;
@@ -17,7 +19,7 @@ const createPopupNewCommentTemplate = (state) => {
   <div class="film-details__add-emoji-label">${getSelectedEmojiPicture()}</div>
 
   <label class="film-details__comment-label">
-    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(state.localComment)}</textarea>
+    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${inDisabledState}>${he.encode(state.localComment)}</textarea>
   </label>
   <div class="film-details__emoji-list">
   ${EmojisOrder.map((emoji) => createListElement(emoji)).join('')}
@@ -26,15 +28,18 @@ const createPopupNewCommentTemplate = (state) => {
 };
 
 export default class PopupNewCommentView extends AbstractStatefulView {
-  constructor(comment) {
+  #isDisabled = false;
+
+  constructor(isDisabled, comment) {
     super();
+    this.#isDisabled = isDisabled;
 
     this._state = PopupNewCommentView.parseCommentToState(comment);
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createPopupNewCommentTemplate(this._state);
+    return createPopupNewCommentTemplate(this._state, this.#isDisabled);
   }
 
   setAddCommentKeyDownHandler = (callback) => {
@@ -53,7 +58,7 @@ export default class PopupNewCommentView extends AbstractStatefulView {
   };
 
   #commentAddKeyDownHandler = (evt) => {
-    if (evt.keyCode === ENTER_KEY && evt.ctrlKey || evt.keyCode === ENTER_KEY && evt.metaKey) {
+    if (evt.keyCode === ENTER_KEY && (evt.ctrlKey || evt.metaKey)) {
       this._callback.commentAddKeyDown(PopupNewCommentView.parseStateToComment(this._state));
     }
   };
@@ -73,8 +78,8 @@ export default class PopupNewCommentView extends AbstractStatefulView {
 
   static parseCommentToState = (comment) => ({
     ...comment,
-    localComment: '',
-    localEmotion: null,
+    localComment: comment?.comment || '',
+    localEmotion: comment?.emotion || null,
   });
 
   static parseStateToComment = (state) => {

@@ -52,7 +52,7 @@ export default class FilmCardsModel extends Observable {
         ...this.#filmCards.slice(index + 1),
       ];
       this._notify(updateType, updatedCard);
-    } catch (err) {
+    } catch {
       throw new Error('Can\'t update card');
     }
   };

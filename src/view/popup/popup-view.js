@@ -1,6 +1,6 @@
 import AbstractView from '../../framework/view/abstract-view.js';
 import { humanizePopupFilmDate, humanizeFilmRunTime } from '../../utils/datetime.js';
-import { checkTotalRating } from '../../utils/other.js';
+import { formatTotalRating, getGenreTitle } from '../../utils/other.js';
 
 const createPopupTemplate = (filmCard) => {
   const { filmInfo: { title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release: { date, releaseCountry }, runtime, genre, description } } = filmCard;
@@ -26,7 +26,7 @@ const createPopupTemplate = (filmCard) => {
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${checkTotalRating(totalRating)}</p>
+              <p class="film-details__total-rating">${formatTotalRating(totalRating)}</p>
             </div>
           </div>
 
@@ -56,7 +56,7 @@ const createPopupTemplate = (filmCard) => {
               <td class="film-details__cell">${releaseCountry}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
+              <td class="film-details__term">${getGenreTitle(genre)}</td>
               <td class="film-details__cell">
                 <span class="film-details__genre">${genre.join('&emsp;')}</span>
               </td>
