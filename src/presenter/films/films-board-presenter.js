@@ -95,8 +95,13 @@ export default class FilmsBoardPresenter {
       default:
         this.#uiBlocker.block();
         try {
+          const currentFilmPresenter = update.id === this.#openedFilmPresenter?.cardId
+            ? this.#openedFilmPresenter
+            : this.#filmPresentersList.get(update.id);
+          // currentFilmPresenter.disableControls();
           await this.#cardsModel.updateCard(updateType, update);
-        } catch {
+        } catch (err) {
+          console.log(err);
           this.#filmPresentersList.get(update.id).shakeFilm();
         }
         this.#uiBlocker.unblock();
@@ -108,17 +113,18 @@ export default class FilmsBoardPresenter {
       case UpdateType.PATCH:
         this.#filmPresentersList.get(data.id).init(data);
         break;
-      case UpdateType.MINOR:
-        if (data.id === this.#openedFilmPresenter?.cardId) {
-          this.#openedFilmPresenter.init(data);
-        } else {
-          this.#filmPresentersList.get(data.id).init(data);
-        }
+      case UpdateType.MINOR: {
+        const currentFilmPresenter = data.id === this.#openedFilmPresenter?.cardId
+          ? this.#openedFilmPresenter
+          : this.#filmPresentersList.get(data.id);
+        // currentFilmPresenter.enableControls();
+        currentFilmPresenter.init(data);
         if (this.#filterType !== FilterType.ALL) {
           this.#clearFilmsSection();
           this.#renderFilmsBoard();
         }
         break;
+      }
       case UpdateType.MAJOR:
         this.#clearFilmsSection({ resetRenderedCardCount: true, resetSortType: true });
         this.#renderFilmsBoard();

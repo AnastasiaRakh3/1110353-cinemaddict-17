@@ -1,8 +1,8 @@
 import AbstractView from '../../framework/view/abstract-view.js';
 import { humanizeCardFilmDate, humanizeFilmRunTime } from '../../utils/datetime.js';
-import { formatTotalRating, formatDescription } from '../../utils/other.js';
+import { formatTotalRating, formatDescription, getDisabledState } from '../../utils/other.js';
 
-const createFilmCardTemplate = (filmCard) => {
+const createFilmCardTemplate = (filmCard, isControlsDisabled) => {
   const { comments, filmInfo: { title, totalRating, poster, release: { date }, runtime, genre, description }, userDetails: { watchlist, alreadyWatched, favorite } } = filmCard;
 
   const inWatchListClassName = watchlist ? 'film-card__controls-item--active' : '';
@@ -23,23 +23,25 @@ const createFilmCardTemplate = (filmCard) => {
     <span class="film-card__comments">${comments.length} comments</span>
   </a>
   <div class="film-card__controls">
-    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${inWatchListClassName}" type="button">Add to watchlist</button>
-    <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${inAlreadyWatchedClassName}" type="button">Mark as watched</button>
-    <button class="film-card__controls-item film-card__controls-item--favorite ${inFavoriteClassName}" type="button">Mark as favorite</button>
+    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${inWatchListClassName}" type="button" ${getDisabledState(isControlsDisabled)}>Add to watchlist</button>
+    <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${inAlreadyWatchedClassName}" type="button" ${getDisabledState(isControlsDisabled)}>Mark as watched</button>
+    <button class="film-card__controls-item film-card__controls-item--favorite ${inFavoriteClassName}" type="button" ${getDisabledState(isControlsDisabled)}>Mark as favorite</button>
   </div>
   </article>`;
 };
 
 export default class FilmCard extends AbstractView {
   #filmCard = null;
+  #isControlsDisabled = false;
 
-  constructor(filmCard) {
+  constructor(filmCard, isControlsDisabled) {
     super();
     this.#filmCard = filmCard;
+    this.#isControlsDisabled = isControlsDisabled;
   }
 
   get template() {
-    return createFilmCardTemplate(this.#filmCard);
+    return createFilmCardTemplate(this.#filmCard, this.#isControlsDisabled);
   }
 
   setClickHandler = (callback) => {

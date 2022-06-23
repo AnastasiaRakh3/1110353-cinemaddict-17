@@ -1,10 +1,10 @@
 import AbstractView from '../../framework/view/abstract-view';
 import { displayRelativeTimeDate } from '../../utils/datetime.js';
+import { getDisabledState } from '../../utils/other';
 
 const createPopupCommentTemplate = (commentElement, isDeleting) => {
   const { id, author, comment, date, emotion } = commentElement;
   const deleteButtonText = isDeleting ? 'Deleting...' : 'Delete';
-  const inDisabledState = isDeleting ? 'disabled' : '';
 
   return `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
@@ -15,7 +15,7 @@ const createPopupCommentTemplate = (commentElement, isDeleting) => {
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
       <span class="film-details__comment-day">${displayRelativeTimeDate(date)}</span>
-      <button class="film-details__comment-delete" data-comment-id="${id}" ${inDisabledState}>${deleteButtonText}</button>
+      <button class="film-details__comment-delete" data-comment-id="${id}" ${getDisabledState(isDeleting)}>${deleteButtonText}</button>
     </p>
   </div>
   </li>`;

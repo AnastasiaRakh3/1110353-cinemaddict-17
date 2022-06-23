@@ -23,6 +23,7 @@ export default class FilmPresenter {
 
   #card = null;
   #mode = Mode.DEFAULT;
+  #isControlsDisabled = false;
   #cardComponent = null;
   #popupComponent = null;
   #popupFilmControlsComponent = null;
@@ -46,12 +47,16 @@ export default class FilmPresenter {
     return this.#card.id;
   }
 
+  get isOpened() {
+    return this.#mode === Mode.WATCHING;
+  }
+
   init = (card) => {
     this.#card = card;
 
     this.#renderFilmCard();
 
-    if (this.#mode === Mode.WATCHING) {
+    if (this.isOpened) {
       this.#updatePopupFilmControls();
     }
   };
@@ -62,13 +67,13 @@ export default class FilmPresenter {
   };
 
   resetView = () => {
-    if (this.#mode !== Mode.DEFAULT) {
+    if (this.isOpened) {
       this.#closePopup();
     }
   };
 
   shakeFilm = () => {
-    if (this.#mode === Mode.DEFAULT) {
+    if (!this.isOpened) {
       this.#cardComponent.shake();
     } else {
       this.#popupFilmControlsComponent.shake();
@@ -77,6 +82,17 @@ export default class FilmPresenter {
 
   removeCard = () => {
     remove(this.#cardComponent);
+    this.#cardComponent = null;
+  };
+
+  disableControls = () => {
+    this.#isControlsDisabled = true;
+    this.#updateFilmControls();
+  };
+
+  enableControls = () => {
+    this.#isControlsDisabled = false;
+    this.#updateFilmControls();
   };
 
   #handleCommentsModelChange = (updateType) => {
@@ -95,13 +111,23 @@ export default class FilmPresenter {
     }
   };
 
+  #updateFilmControls = () => {
+    if (this.isOpened) {
+      this.#updatePopupFilmControls();
+    }
+
+    if (this.#cardComponent) {
+      this.#renderFilmCard();
+    }
+  };
+
   #renderComments = () => {
     this.#commentsPresenter.init(this.#popupComponent.element.querySelector('.film-details__top-container'));
   };
 
   #renderFilmCard = () => {
     const prevCardComponent = this.#cardComponent;
-    this.#cardComponent = new FilmCardView(this.#card);
+    this.#cardComponent = new FilmCardView(this.#card, this.#isControlsDisabled);
 
     this.#cardComponent.setClickHandler(this.#handleCardClick);
     this.#cardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
@@ -143,7 +169,7 @@ export default class FilmPresenter {
   };
 
   #createNewPopupFilmControlsComponent = () => {
-    this.#popupFilmControlsComponent = new PopupFilmControls(this.#card);
+    this.#popupFilmControlsComponent = new PopupFilmControls(this.#card, this.#isControlsDisabled);
     this.#popupFilmControlsComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
     this.#popupFilmControlsComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#popupFilmControlsComponent.setFavoriteClickHandler(this.#handleFavoriteClick);

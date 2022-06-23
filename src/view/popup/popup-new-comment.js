@@ -1,16 +1,15 @@
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
 import { Emotion, ENTER_KEY } from '../../const.js';
+import { getDisabledState } from '../../utils/other.js';
 import he from 'he';
 
 const EmojisOrder = [Emotion.SMILE, Emotion.SLEEPING, Emotion.PUKE, Emotion.ANGRY];
 
 const createPopupNewCommentTemplate = (state, isDisabled) => {
-  const inDisabledState = isDisabled ? 'disabled' : '';
-
   const getSelectedEmojiPicture = () => state.localEmotion !== null ? `<img src="images/emoji/${state.localEmotion}.png" width="55" height="55" alt="emoji-${state.localEmotion}">` : '';
   const checkIsEmojiSelected = (emoji) => emoji === state.localEmotion ? 'checked' : '';
 
-  const createListElement = (emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)} ${inDisabledState}>
+  const createListElement = (emoji) => `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${checkIsEmojiSelected(emoji)} ${getDisabledState(isDisabled)}>
   <label class="film-details__emoji-label" for="emoji-${emoji}">
     <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
   </label>`;
@@ -19,7 +18,7 @@ const createPopupNewCommentTemplate = (state, isDisabled) => {
   <div class="film-details__add-emoji-label">${getSelectedEmojiPicture()}</div>
 
   <label class="film-details__comment-label">
-    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${inDisabledState}>${he.encode(state.localComment)}</textarea>
+    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${getDisabledState(isDisabled)}>${he.encode(state.localComment)}</textarea>
   </label>
   <div class="film-details__emoji-list">
   ${EmojisOrder.map((emoji) => createListElement(emoji)).join('')}

@@ -12,4 +12,6 @@ const formatDescription = (string) => {
 
 const getGenreTitle = (genres) => genres.length > 1 ? 'Genres' : 'Genre';
 
-export { formatTotalRating, formatDescription, getGenreTitle };
+const getDisabledState = (isDisabled) => isDisabled ? 'disabled' : '';
+
+export { formatTotalRating, formatDescription, getGenreTitle, getDisabledState };

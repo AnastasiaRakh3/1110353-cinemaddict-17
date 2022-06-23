@@ -1,6 +1,7 @@
 import AbstractView from '../../framework/view/abstract-view';
+import { getDisabledState } from '../../utils/other';
 
-const createPopupFilmControls = (filmCard) => {
+const createPopupFilmControls = (filmCard, isControlsDisabled) => {
   const { userDetails: { watchlist, alreadyWatched, favorite } } = filmCard;
 
   const inWatchListClassName = watchlist ? 'film-details__control-button--active' : '';
@@ -8,22 +9,24 @@ const createPopupFilmControls = (filmCard) => {
   const inFavoriteClassName = favorite ? 'film-details__control-button--active' : '';
 
   return ` <section class="film-details__controls">
-  <button type="button" class="film-details__control-button film-details__control-button--watchlist ${inWatchListClassName}" id="watchlist" name="watchlist">Add to watchlist</button>
-  <button type="button" class="film-details__control-button film-details__control-button--watched ${inAlreadyWatchedClassName}" id="watched" name="watched">Already watched</button>
-  <button type="button" class="film-details__control-button film-details__control-button--favorite ${inFavoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
+  <button type="button" class="film-details__control-button film-details__control-button--watchlist ${inWatchListClassName}" id="watchlist" name="watchlist" ${getDisabledState(isControlsDisabled)}>Add to watchlist</button>
+  <button type="button" class="film-details__control-button film-details__control-button--watched ${inAlreadyWatchedClassName}" id="watched" name="watched" ${getDisabledState(isControlsDisabled)}>Already watched</button>
+  <button type="button" class="film-details__control-button film-details__control-button--favorite ${inFavoriteClassName}" id="favorite" name="favorite" ${getDisabledState(isControlsDisabled)}>Add to favorites</button>
 </section>`;
 };
 
 export default class PopupFilmControls extends AbstractView {
   #filmCard = null;
+  #isControlsDisabled = false;
 
-  constructor(filmCard) {
+  constructor(filmCard, isControlsDisabled) {
     super();
     this.#filmCard = filmCard;
+    this.#isControlsDisabled = isControlsDisabled;
   }
 
   get template() {
-    return createPopupFilmControls(this.#filmCard);
+    return createPopupFilmControls(this.#filmCard, this.#isControlsDisabled);
   }
 
   setWatchlistClickHandler = (callback) => {
