@@ -1,4 +1,4 @@
-import FilmsBlockView from '../../view/films-section/films-block-view';
+import FilmsBlockView from '../../view/films-section/films-block-view.js';
 import FilmsListView from '../../view/films-section/films-list-view.js';
 import FilmsListContainerView from '../../view/films-section/films-list-container-view.js';
 import LoadMoreButtonView from '../../view/films-section/loadmore-button-view.js';
@@ -11,7 +11,7 @@ import { SortType, UpdateType, FilterType, UserAction } from '../../const.js';
 import { sortCardsByDate, sortCardsByRating } from '../../utils/sort.js';
 import { filter } from '../../utils/filter.js';
 import { render, RenderPosition, remove } from '../../framework/render.js';
-import { uiBlockerInstance } from '../../utils/ui-blocker';
+import { uiBlockerInstance } from '../../utils/ui-blocker.js';
 
 const CARD_COUNT_PER_STEP = 5;
 
@@ -112,16 +112,16 @@ export default class FilmsBoardPresenter {
     }
   };
 
-  #handleModelChange = (updateType, data) => {
+  #handleModelChange = (updateType, update) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#filmPresentersList.get(data.id).init(data);
+        this.#filmPresentersList.get(update.id).init(update);
         break;
       case UpdateType.MINOR: {
-        const currentFilmPresenter = data.id === this.#openedFilmPresenter?.cardId
+        const currentFilmPresenter = update.id === this.#openedFilmPresenter?.cardId
           ? this.#openedFilmPresenter
-          : this.#filmPresentersList.get(data.id);
-        currentFilmPresenter.init(data);
+          : this.#filmPresentersList.get(update.id);
+        currentFilmPresenter.init(update);
         if (this.#filterType !== FilterType.ALL) {
           this.#clearFilmsSection();
           this.#renderFilmsBoard();
@@ -212,7 +212,6 @@ export default class FilmsBoardPresenter {
     this.#filmPresentersList.clear();
 
     remove(this.#loadMoreButtonComponent);
-    remove(this.#loadingComponent);
 
     if (resetRenderedCardCount) {
       this.#renderedCardCount = CARD_COUNT_PER_STEP;

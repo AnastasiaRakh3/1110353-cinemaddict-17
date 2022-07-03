@@ -1,6 +1,6 @@
-import AbstractView from '../../framework/view/abstract-view';
+import AbstractView from '../../framework/view/abstract-view.js';
 import { displayRelativeTimeDate } from '../../utils/datetime.js';
-import { getDisabledState } from '../../utils/other';
+import { getDisabledState } from '../../utils/other.js';
 
 const createPopupCommentTemplate = (commentElement, isDeleting) => {
   const { id, author, comment, date, emotion } = commentElement;

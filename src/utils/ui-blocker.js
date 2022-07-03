@@ -1,4 +1,4 @@
-import UiBlocker from '../framework/ui-blocker/ui-blocker';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,

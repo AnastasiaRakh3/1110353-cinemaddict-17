@@ -1,5 +1,5 @@
 import PopupCommentsListView from '../../view/popup/popup-comments-list-view.js';
-import PopupNewCommentView from '../../view/popup/popup-new-comment.js';
+import PopupNewCommentView from '../../view/popup/popup-new-comment-view.js';
 import PopupCommentsListTitleView from '../../view/popup/popup-comments-list-title-view.js';
 import CommentPresenter from './comment-presenter.js';
 import { UserAction, UpdateType } from '../../const.js';
@@ -21,7 +21,7 @@ export default class CommentsPresenter {
   constructor(commentsModel) {
     this.#commentsModel = commentsModel;
 
-    this.#commentsModel.addObserver(this.#handleComentsModelChange);
+    this.#commentsModel.addObserver(this.#handleCommentsModelChange);
   }
 
   get commentsList() {
@@ -77,7 +77,7 @@ export default class CommentsPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handleComentsModelChange = (updateType, update) => {
+  #handleCommentsModelChange = (updateType, update) => {
     switch (updateType) {
       case UpdateType.MINOR:
         this.#commentPresenterList.get(update).destroy();
@@ -113,7 +113,7 @@ export default class CommentsPresenter {
     if (newCommentState) {
       replace(this.#popupNewCommentComponent, prevPopupNewCommentComponent);
     } else {
-      render(this.#popupNewCommentComponent, this.#popupCommentsListComponent.element, RenderPosition.BEFOREEND);
+      render(this.#popupNewCommentComponent, this.#popupCommentsListComponent.element);
     }
 
     if (prevPopupNewCommentComponent !== null) {
@@ -152,7 +152,6 @@ export default class CommentsPresenter {
 
   #setDisabledState = () => {
     this.#isNewCommentDisabled = true;
-
   };
 
   #setDefaultState = () => {
