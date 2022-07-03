@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/view/abstract-view';
+import AbstractView from '../../framework/view/abstract-view.js';
 import { getDisabledState } from '../../utils/other';
 
 const createPopupFilmControls = (filmCard, isControlsDisabled) => {

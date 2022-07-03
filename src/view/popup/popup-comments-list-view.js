@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/view/abstract-view';
+import AbstractView from '../../framework/view/abstract-view.js';
 
 const createPopupCommentsListTemplate = () => `<div class="film-details__bottom-container">
   <section class="film-details__comments-wrap">

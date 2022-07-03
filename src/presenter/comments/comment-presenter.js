@@ -1,5 +1,5 @@
-import PopupCommentView from '../../view/popup/popup-comment-view';
-import { render, remove, replace } from '../../framework/render';
+import PopupCommentView from '../../view/popup/popup-comment-view.js';
+import { render, remove, replace } from '../../framework/render.js';
 
 export default class CommentPresenter {
   #renderingPlace = null;

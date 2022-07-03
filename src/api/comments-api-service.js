@@ -1,5 +1,5 @@
-import ApiService from '../framework/api-service';
-import { Method } from '../server-config';
+import ApiService from '../framework/api-service.js';
+import { Method } from '../server-config.js';
 
 export default class CommentsApiService extends ApiService {
   #cardId = null;

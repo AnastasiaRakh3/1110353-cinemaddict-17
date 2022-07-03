@@ -1,6 +1,6 @@
-import UserView from '../view/user-view';
-import { UserStatus } from '../const';
-import { render, remove, replace } from '../framework/render';
+import UserView from '../view/user-view.js';
+import { UserStatus } from '../const.js';
+import { render, remove, replace } from '../framework/render.js';
 
 export default class UserPresenter {
   #renderingPlace = null;

@@ -1,5 +1,5 @@
-import FooterStatisticsView from '../view/footer-statistics';
-import { render, replace, remove } from '../framework/render';
+import FooterStatisticsView from '../view/footer-statistics-view.js';
+import { render, replace, remove } from '../framework/render.js';
 
 export default class FooterPresenter {
   #cardsModel = null;

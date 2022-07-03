@@ -73,10 +73,10 @@ export default class FilmPresenter {
   };
 
   shakeFilm = () => {
-    if (!this.isOpened) {
-      this.#cardComponent.shake();
-    } else {
+    if (this.isOpened) {
       this.#popupFilmControlsComponent.shake();
+    } else {
+      this.#cardComponent.shake();
     }
   };
 
@@ -115,9 +115,7 @@ export default class FilmPresenter {
       this.#updatePopupFilmControls();
     }
 
-    if (this.#cardComponent) {
-      this.#renderFilmCard();
-    }
+    this.#renderFilmCard();
   };
 
   #renderComments = () => {

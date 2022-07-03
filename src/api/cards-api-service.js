@@ -1,5 +1,5 @@
-import ApiService from '../framework/api-service';
-import { Method } from '../server-config';
+import ApiService from '../framework/api-service.js';
+import { Method } from '../server-config.js';
 
 export default class CardsApiService extends ApiService {
   get cards() {
